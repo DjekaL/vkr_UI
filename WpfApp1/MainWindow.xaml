@@ -5,8 +5,70 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="800">
     <Grid>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="0.5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <GroupBox Content="График интенсивности нагрузки" Grid.Row="1">
+                 
+            </GroupBox>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <GroupBox Background="LightGreen" Margin="50,10,50,10" BorderBrush="White" Grid.Column="0">
+                    <Label Content="Устройства в сети" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Margin="10"/>
+                </GroupBox>
+                <GroupBox Background="LightPink" Margin="50,10,50,10" BorderBrush="White" Grid.Column="1">
+                    <Label Content="Устройства не в сети" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Margin="10"/>
+                </GroupBox>
+                <TextBox x:Name="onlineDevices" Text="fgsf" Margin="20,10,20,20" Grid.Column="0" Grid.Row="1" TextAlignment="Center" BorderBrush="White"/>
+                <TextBox x:Name="offlineDevices" Text="gdf" Margin="20,10,20,20" Grid.Column="1" Grid.Row="1" TextAlignment="Center" BorderBrush="White"/>
+            </Grid>
+        </Grid>
+        <TabControl Grid.Column="1" TabStripPlacement="Right">
+            <TabControl.Resources>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="HeaderTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <ContentPresenter Content="{TemplateBinding Content}">
+                                    <ContentPresenter.LayoutTransform>
+                                        <RotateTransform Angle="90" />
+                                    </ContentPresenter.LayoutTransform>
+                                </ContentPresenter>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Padding" Value="3" />
+                </Style>
+            </TabControl.Resources>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock>Лог состояния</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock>Лог сети</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
