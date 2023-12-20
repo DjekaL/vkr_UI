@@ -20,9 +20,22 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
+        string _userCat = "";
+        
         public MainWindow()
         {
             InitializeComponent();
+            Authorization authorization = new Authorization();
+            authorization.ShowDialog();
+            _userCat = authorization.cat;
+            if (_userCat == "admin") {
+                AdminWindow adminWindow = new AdminWindow();
+                adminWindow.Show();
+                this.Close();
+            }
+            if (_userCat == "") {
+                this.Close();
+            }
         }
     }
 }

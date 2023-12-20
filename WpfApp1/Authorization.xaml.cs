@@ -17,8 +17,20 @@ namespace WpfApp1 {
     /// Логика взаимодействия для Authorization.xaml
     /// </summary>
     public partial class Authorization : Window {
+        public string cat = "";
         public Authorization() {
             InitializeComponent();
+        }
+
+        private void authoBut_Click(object sender, RoutedEventArgs e) {
+            if (login.Text == "user" && password.Password == "user") {
+                cat = "user";
+                this.Close();
+            }
+            if (login.Text == "admin" && password.Password == "admin") {
+                cat = "admin";
+                this.Close();
+            }
         }
     }
 }

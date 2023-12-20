@@ -1,0 +1,162 @@
+﻿<Window x:Class="WpfApp1.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="AdminWindow" Height="450" Width="800">
+    <Grid>
+        <TabControl>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock>Изменить пользователей</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <TabControl>
+                        <TabItem>
+                            <TabItem.Header>
+                                <StackPanel>
+                                    <TextBlock>Изменить пароль</TextBlock>
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Пользователь" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,50,0"/>
+                                <ComboBox x:Name="userList" Grid.Row="0" Grid.Column="1" Margin="50,25,50,25" FontSize="25" MaxHeight="50"/>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Старый пароль" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,50,0"/>
+                                <TextBox x:Name="oldPas" Grid.Row="1" Grid.Column="1" Margin="50,25,50,25" FontSize="25" MaxHeight="50"/>
+                                <Label Grid.Row="2" Grid.Column="0" Content="Новый пароль" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,50,0"/>
+                                <TextBox x:Name="newPas" Grid.Row="2" Grid.Column="1" Margin="50,25,50,25" FontSize="25" MaxHeight="50"/>
+                                <Button x:Name="changePasBtn" Grid.ColumnSpan="2" Grid.Row="3" Content="Изменить" FontSize="25" Margin="100,20,100,20" Width="250" MaxHeight="50"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem>
+                            <TabItem.Header>
+                                <StackPanel>
+                                    <TextBlock>Добавить учетную запись оператора</TextBlock>
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Логин" FontSize="25" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,50,0"/>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Пароль" FontSize="25" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,50,0"/>
+                                <TextBox x:Name="addNewLogin" Grid.Row="0" Grid.Column="1" FontSize="25" Margin="50,35,50,35" MaxHeight="50"/>
+                                <TextBox x:Name="addNewPas" Grid.Row="1" Grid.Column="1" FontSize="25" Margin="50,35,50,35" MaxHeight="50"/>
+                                <Button x:Name="addNewUser" Grid.ColumnSpan="2" Grid.Row="2" Content="Добавить пользователя" FontSize="25" Width="300" Margin="100,25,100,25" MaxHeight="60"/>
+                            </Grid>
+                        </TabItem>
+                        <TabItem>
+                            <TabItem.Header>
+                                <StackPanel>
+                                    <TextBlock>Удалить учетную запись оператора</TextBlock>
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid>
+                                
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock>Изменить топологию</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.75*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="0.75*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" Content="Тип устройства" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <Label Grid.Row="0" Grid.Column="2" Content="Время опроса, с." FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <ComboBox x:Name="deviceTypeList" Grid.Row="0" Grid.Column="1" Margin="5,20,20,20" MaxHeight="40"/>
+                        <TextBox  x:Name="newTime" Grid.Row="0" Grid.Column="3" Margin="5,20,5,20" MaxHeight="40"/>
+                        <Button x:Name="setTime" Grid.Row="0" Grid.Column="4" Content="Установить время" FontSize="15" Margin="0,20,0,20" HorizontalAlignment="Center" Width="170" MaxHeight="40"/>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <GroupBox Header="Добавить устройство" FontSize="13">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.75*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="0.75*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="0.75*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Тип устройства" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <ComboBox Grid.Column="1" Margin="5,20,20,20" MaxHeight="40"/>
+                                <Label Grid.Column="2" Content="Имя устройства" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <TextBox Grid.Column="3" Margin="5,20,5,20" MaxHeight="40"/>
+                                <Button Grid.Column="4" Content="Добавить" FontSize="15" Margin="0,20,0,20" HorizontalAlignment="Center" Width="100" MaxHeight="40"/>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <GroupBox Header="Удалить устройство" FontSize="13">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.75*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="0.75*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Имя устройства" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <ComboBox Grid.Column="1" Margin="5,20,20,20" MaxHeight="40"/>
+                                <Button Grid.Column="2" Content="Добавить" FontSize="15" Margin="0,20,0,20" HorizontalAlignment="Center" Width="100" MaxHeight="40"/>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <GroupBox Header="Соеденить устройства" FontSize="13">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="0.6*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="Устройство" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <Label Grid.Column="2" Content="Соеденить с устройством" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <ComboBox Grid.Column="1" Margin="5,20,20,20" MaxHeight="40"/>
+                                <ComboBox Grid.Column="3" Margin="5,20,20,20" MaxHeight="40"/>
+                                <Button Grid.Column="4" Content="Соеденить" FontSize="15" Margin="0,20,0,20" HorizontalAlignment="Center" Width="100" MaxHeight="40"/>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
