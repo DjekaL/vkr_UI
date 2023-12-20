@@ -1,0 +1,26 @@
+﻿<Window x:Class="WpfApp1.Authorization"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="Authorization" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Логин" Grid.Row="2" FontSize="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom"/>
+        <Label Content="Пароль" Grid.Row="4" FontSize="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom"/>
+        <TextBox x:Name="login" Grid.Row="3" Width="250" FontSize="25" Margin="0,0,0,10"/>
+        <PasswordBox x:Name="password" Grid.Row="5" Width="250" FontSize="25" Margin="0,0,0,10"/>
+        <Button x:Name="authoBut" Grid.Row="6" Width="300" Content="Войти" FontSize="25" Margin="0,5,0,5"/>
+    </Grid>
+</Window>

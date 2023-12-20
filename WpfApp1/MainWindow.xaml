@@ -4,71 +4,142 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
+        xmlns:lvc ="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="0.5*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0.5*"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-            <GroupBox Content="График интенсивности нагрузки" Grid.Row="1">
-                 
-            </GroupBox>
-            <Grid Grid.Row="0">
+    <TabControl>
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel>
+                    <TextBlock>Главное окно</TextBlock>
+                </StackPanel>
+            </TabItem.Header>
+            <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="0.5*"/>
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <GroupBox Background="LightGreen" Margin="50,10,50,10" BorderBrush="White" Grid.Column="0">
-                    <Label Content="Устройства в сети" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Margin="10"/>
-                </GroupBox>
-                <GroupBox Background="LightPink" Margin="50,10,50,10" BorderBrush="White" Grid.Column="1">
-                    <Label Content="Устройства не в сети" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Margin="10"/>
-                </GroupBox>
-                <TextBox x:Name="onlineDevices" Text="fgsf" Margin="20,10,20,20" Grid.Column="0" Grid.Row="1" TextAlignment="Center" BorderBrush="White"/>
-                <TextBox x:Name="offlineDevices" Text="gdf" Margin="20,10,20,20" Grid.Column="1" Grid.Row="1" TextAlignment="Center" BorderBrush="White"/>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.5*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Content="График интенсивности нагрузки" Grid.Row="1">
+
+                    </GroupBox>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Background="LightGreen" Margin="50,10,50,10" BorderBrush="White" Grid.Column="0">
+                            <Label Content="Устройства в сети" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Margin="10"/>
+                        </GroupBox>
+                        <GroupBox Background="LightPink" Margin="50,10,50,10" BorderBrush="White" Grid.Column="1">
+                            <Label Content="Устройства не в сети" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Margin="10"/>
+                        </GroupBox>
+                        <TextBox x:Name="onlineDevices" Text="fgsf" Margin="20,10,20,20" Grid.Column="0" Grid.Row="1" TextAlignment="Center" BorderBrush="White" IsEnabled="False"/>
+                        <TextBox x:Name="offlineDevices" Text="gdf" Margin="20,10,20,20" Grid.Column="1" Grid.Row="1" TextAlignment="Center" BorderBrush="White" IsEnabled="False"/>
+                    </Grid>
+                </Grid>
+                <TabControl Grid.Column="1" TabStripPlacement="Right">
+                    <TabControl.Resources>
+                        <Style TargetType="{x:Type TabItem}">
+                            <Setter Property="HeaderTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <ContentPresenter Content="{TemplateBinding Content}">
+                                            <ContentPresenter.LayoutTransform>
+                                                <RotateTransform Angle="90" />
+                                            </ContentPresenter.LayoutTransform>
+                                        </ContentPresenter>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Padding" Value="3" />
+                        </Style>
+                    </TabControl.Resources>
+                    <TabItem>
+                        <TabItem.Header>
+                            <StackPanel>
+                                <TextBlock>Лог состояния</TextBlock>
+                            </StackPanel>
+                        </TabItem.Header>
+                    </TabItem>
+                    <TabItem>
+                        <TabItem.Header>
+                            <StackPanel>
+                                <TextBlock>Лог сети</TextBlock>
+                            </StackPanel>
+                        </TabItem.Header>
+                    </TabItem>
+                </TabControl>
             </Grid>
-        </Grid>
-        <TabControl Grid.Column="1" TabStripPlacement="Right">
-            <TabControl.Resources>
-                <Style TargetType="{x:Type TabItem}">
-                    <Setter Property="HeaderTemplate">
-                        <Setter.Value>
-                            <DataTemplate>
-                                <ContentPresenter Content="{TemplateBinding Content}">
-                                    <ContentPresenter.LayoutTransform>
-                                        <RotateTransform Angle="90" />
-                                    </ContentPresenter.LayoutTransform>
-                                </ContentPresenter>
-                            </DataTemplate>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="Padding" Value="3" />
-                </Style>
-            </TabControl.Resources>
-            <TabItem>
-                <TabItem.Header>
-                    <StackPanel>
-                        <TextBlock>Лог состояния</TextBlock>
-                    </StackPanel>
-                </TabItem.Header>
-            </TabItem>
-            <TabItem>
-                <TabItem.Header>
-                    <StackPanel>
-                        <TextBlock>Лог сети</TextBlock>
-                    </StackPanel>
-                </TabItem.Header>
-            </TabItem>
-        </TabControl>
-    </Grid>
+        </TabItem>
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel>
+                    <TextBlock>Статистика</TextBlock>
+                </StackPanel>
+            </TabItem.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition Height="0.75*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <GroupBox Header="Статистика оборудования">
+                        <DataGrid x:Name="deviceStatics" AutoGenerateColumns="True">
+                            
+                        </DataGrid>
+                    </GroupBox>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <GroupBox Header="Статистика маршрута">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.5*"/>
+                                <RowDefinition Height="1.5*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="0.5*"/>
+                                    <RowDefinition Height="0.75*"/>
+                                </Grid.RowDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Устройство отправитель" HorizontalContentAlignment="Center"/>
+                                <Label Grid.Row="0" Grid.Column="1" Content="Устройство получатель" HorizontalContentAlignment="Center"/>
+                                <ComboBox Grid.Row="1" Grid.Column="0" Name="senderDevices" Margin="20,0,20,6"/>
+                                <ComboBox Grid.Row="1" Grid.Column="1" Name="recipientDevices" Margin="20,0,20,6"/>
+                                <Button x:Name="calcMetrics" Grid.Column="2" Grid.RowSpan="2" Margin="20,10,20,10" Content="Рассчитать"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <DataGrid x:Name="routStatistics" AutoGenerateColumns="True">
+                                        
+                                    </DataGrid>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    <lvc:CartesianChart  Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" 
+                                        DrawMarginFrame="{Binding Frame}" TooltipPosition="Top"/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>
