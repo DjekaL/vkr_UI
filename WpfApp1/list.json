@@ -1,0 +1,266 @@
+[
+  {
+    "firstDevice": 1,
+    "secondDevice": 3,
+    "weight": 200,
+    "name": "Сервер1"
+  },
+  {
+    "firstDevice": 2,
+    "secondDevice": 4,
+    "weight": 200,
+    "name": "Сервер2"
+  },
+  {
+    "firstDevice": 3,
+    "secondDevice": 5,
+    "weight": 200,
+    "name": ""
+  },
+  {
+    "firstDevice": 3,
+    "secondDevice": 5,
+    "weight": 200,
+    "name": ""
+  },
+  {
+    "firstDevice": 4,
+    "secondDevice": 6,
+    "weight": 200,
+    "name": ""
+  },
+  {
+    "firstDevice": 5,
+    "secondDevice": 6,
+    "weight": 200,
+    "name": ""
+  },
+  {
+    "firstDevice": 6,
+    "secondDevice": 7,
+    "weight": 200,
+    "name": ""
+  },
+  {
+    "firstDevice": 7,
+    "secondDevice": 8,
+    "weight": 150,
+    "name": ""
+  },
+  {
+    "firstDevice": 7,
+    "secondDevice": 9,
+    "weight": 150,
+    "name": ""
+  },
+  {
+    "firstDevice": 9,
+    "secondDevice": 10,
+    "weight": 150,
+    "name": ""
+  },
+  {
+    "firstDevice": 11,
+    "secondDevice": 8,
+    "weight": 100,
+    "name": "Бухгалтерия1"
+  },
+  {
+    "firstDevice": 12,
+    "secondDevice": 8,
+    "weight": 100,
+    "name": "Бухгалтерия2"
+  },
+  {
+    "firstDevice": 13,
+    "secondDevice": 8,
+    "weight": 100,
+    "name": "Бухгалтерия3"
+  },
+  {
+    "firstDevice": 14,
+    "secondDevice": 8,
+    "weight": 100,
+    "name": "Бухгалтерия4"
+  },
+  {
+    "firstDevice": 15,
+    "secondDevice": 8,
+    "weight": 100,
+    "name": "Служба Безопасности1"
+  },
+  {
+    "firstDevice": 16,
+    "secondDevice": 8,
+    "weight": 100,
+    "name": "Служба Безопасности2"
+  },
+  {
+    "firstDevice": 17,
+    "secondDevice": 8,
+    "weight": 100,
+    "name": "Служба Безопасности3"
+  },
+  {
+    "firstDevice": 18,
+    "secondDevice": 8,
+    "weight": 100,
+    "name": "Служба Безопасности4"
+  },
+  {
+    "firstDevice": 19,
+    "secondDevice": 8,
+    "weight": 100,
+    "name": "Администрация1"
+  },
+  {
+    "firstDevice": 20,
+    "secondDevice": 8,
+    "weight": 100,
+    "name": "Администрация2"
+  },
+  {
+    "firstDevice": 21,
+    "secondDevice": 8,
+    "weight": 100,
+    "name": "Администрация3"
+  },
+  {
+    "firstDevice": 22,
+    "secondDevice": 8,
+    "weight": 100,
+    "name": "Администрация4"
+  },
+  {
+    "firstDevice": 23,
+    "secondDevice": 9,
+    "weight": 100,
+    "name": "Производство1"
+  },
+  {
+    "firstDevice": 24,
+    "secondDevice": 9,
+    "weight": 100,
+    "name": "Производство2"
+  },
+  {
+    "firstDevice": 25,
+    "secondDevice": 9,
+    "weight": 100,
+    "name": "Производство3"
+  },
+  {
+    "firstDevice": 26,
+    "secondDevice": 9,
+    "weight": 100,
+    "name": "Производство4"
+  },
+  {
+    "firstDevice": 27,
+    "secondDevice": 9,
+    "weight": 100,
+    "name": "Производство5"
+  },
+  {
+    "firstDevice": 28,
+    "secondDevice": 9,
+    "weight": 100,
+    "name": "Логистика1"
+  },
+  {
+    "firstDevice": 29,
+    "secondDevice": 9,
+    "weight": 100,
+    "name": "Логистика2"
+  },
+  {
+    "firstDevice": 30,
+    "secondDevice": 9,
+    "weight": 100,
+    "name": "Логистика3"
+  },
+  {
+    "firstDevice": 31,
+    "secondDevice": 9,
+    "weight": 100,
+    "name": "Логистика4"
+  },
+  {
+    "firstDevice": 32,
+    "secondDevice": 9,
+    "weight": 100,
+    "name": "Логистика5"
+  },
+  {
+    "firstDevice": 33,
+    "secondDevice": 10,
+    "weight": 100,
+    "name": "Контроль качества1"
+  },
+  {
+    "firstDevice": 34,
+    "secondDevice": 10,
+    "weight": 100,
+    "name": "Контроль качества2"
+  },
+  {
+    "firstDevice": 35,
+    "secondDevice": 10,
+    "weight": 100,
+    "name": "Контроль качества3"
+  },
+  {
+    "firstDevice": 36,
+    "secondDevice": 10,
+    "weight": 100,
+    "name": "Контроль качества4"
+  },
+  {
+    "firstDevice": 37,
+    "secondDevice": 10,
+    "weight": 100,
+    "name": "Мониторинг1"
+  },
+  {
+    "firstDevice": 38,
+    "secondDevice": 10,
+    "weight": 100,
+    "name": "Мониторинг2"
+  },
+  {
+    "firstDevice": 39,
+    "secondDevice": 10,
+    "weight": 100,
+    "name": "Мониторинг3"
+  },
+  {
+    "firstDevice": 40,
+    "secondDevice": 10,
+    "weight": 100,
+    "name": "Мониторинг4"
+  },
+  {
+    "firstDevice": 41,
+    "secondDevice": 10,
+    "weight": 100,
+    "name": "Отдел продаж1"
+  },
+  {
+    "firstDevice": 42,
+    "secondDevice": 10,
+    "weight": 100,
+    "name": "Отдел продаж2"
+  },
+  {
+    "firstDevice": 43,
+    "secondDevice": 10,
+    "weight": 100,
+    "name": "Отдел продаж3"
+  },
+  {
+    "firstDevice": 44,
+    "secondDevice": 10,
+    "weight": 100,
+    "name": "Отдел продаж4"
+  }
+]
