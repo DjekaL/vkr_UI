@@ -9,7 +9,7 @@ namespace WpfApp1
 {
     public class Dijkstra {
 
-        public static void Set(int size, int[,] smeg, int[,] cost) {
+        public static void Set(int size, int[,] smeg, decimal[,] cost) {
             //заполнение матриц
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
@@ -18,7 +18,7 @@ namespace WpfApp1
                 }
             }
         }
-        public static void Get(List<Connection> cons, int[,] smeg, int[,] cost, Dictionary<int, string> dic) {
+        public static void Get(List<Connection> cons, int[,] smeg, decimal[,] cost, decimal size) {
             int v; //вершина графа откуда дуга
             int w; //вершина графа куда входит дуга
             int c; //стоимость дуги
@@ -28,14 +28,11 @@ namespace WpfApp1
                 w = con.secondDevice;
                 c = con.weight;
                 smeg[v - 1, w - 1] = 1;
-                cost[v - 1, w - 1] = c;
-                if (con.name != String.Empty) {
-                    dic.Add(con.firstDevice, con.name);
-                }
+                cost[v - 1, w - 1] = Math.Round((size / c), 1);
             }
         }
-        public static void Deijkstra(int[,] cost, int st, int size, List<int> seconds) {
-            int[] distance = new int[size]; //массив стоимости
+        public static void Deijkstra(decimal[,] cost, int st, int size, List<int> seconds, List<decimal> times) {
+            decimal[] distance = new decimal[size]; //массив стоимости
             bool[] visited = new bool[size]; //массив для посещенной вершины
 
             for (int i = 0; i < size; i++) {
@@ -43,7 +40,6 @@ namespace WpfApp1
                 visited[i] = false; //пока вершина не посещена
             }
 
-            Console.WriteLine();
             int u = 0;
             distance[st] = 0;
 
@@ -61,13 +57,14 @@ namespace WpfApp1
 
             for (int i = 0; i < size; i++) {
                 if (distance[i] != Int32.MaxValue && i != st ) {
+                    times.Add(distance[i]);
                     seconds.Add(i + 1);
                 }
             }
             
         }
-        private static int MinimumDistance(int[] distance, bool[] visited, int size) {
-            int min = Int32.MaxValue;
+        private static int MinimumDistance(decimal[] distance, bool[] visited, int size) {
+            decimal min = Int32.MaxValue;
             int minIndex = 0;
 
             for (int i = 0; i < size; i++) {

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,8 @@ namespace WpfApp1
 
         Dictionary<int, string> dic = new Dictionary<int, string>();
         List<int> secondPoints = new List<int>();
-        int[,] cost;
+        List<decimal> secondPointsTimes = new List<decimal>();
+        decimal[,] cost;
         List<Connection> connections;
 
         public MainWindow()
@@ -150,13 +152,11 @@ namespace WpfApp1
             string json = File.ReadAllText(@"./list1.json");
             connections = JsonConvert.DeserializeObject<List<Connection>>(json);
 
-            topologSize = connections.Count;
-            var smeg = new int[topologSize, topologSize];
-            cost = new int[topologSize, topologSize];
-
-
-            Dijkstra.Set(topologSize, smeg, cost);
-            Dijkstra.Get(connections, smeg, cost, dic);
+            foreach (var con in connections) {
+                if (con.name != String.Empty) {
+                    dic.Add(con.firstDevice, con.name);
+                }
+            }
 
             foreach (var item in dic.Values) {
                 senderDevices.Items.Add(item);
@@ -166,15 +166,83 @@ namespace WpfApp1
         private void senderDevices_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             recipientDevices.Items.Clear();
             secondPoints.Clear();
+            secondPointsTimes.Clear();
+
+            topologSize = connections.Count;
+            var smeg = new int[topologSize, topologSize];
+            cost = new decimal[topologSize, topologSize];
+
+
+            Dijkstra.Set(topologSize, smeg, cost);
+            Dijkstra.Get(connections, smeg, cost, int.Parse(dataSize.Text));
 
             startVertex = dic.Where(x => x.Value == senderDevices.SelectedItem.ToString()).FirstOrDefault().Key;
 
-            Dijkstra.Deijkstra(cost, startVertex - 1, topologSize, secondPoints);
+            Dijkstra.Deijkstra(cost, startVertex - 1, topologSize, secondPoints, secondPointsTimes);
 
             foreach(var point in secondPoints) {
                 if (dic.ContainsKey(point)) {
                     recipientDevices.Items.Add(dic[point]);
+                    /*secondPoints.RemoveAt(point);
+                    secondPointsTimes.RemoveAt(point);*/
                 }
+            }
+        }
+
+        private void recipientDevices_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            if (recipientDevices.SelectedItem != null) {
+                DataTable table = new DataTable();
+
+                DataColumn column = new DataColumn();
+                column.ColumnName = "Отправитель";
+                table.Columns.Add(column);
+
+                column = new DataColumn();
+                column.ColumnName = "Получатель";
+                table.Columns.Add(column);
+
+                column = new DataColumn();
+                column.ColumnName = "Размер данных, Мбит";
+                column.DataType = Type.GetType("System.Decimal");
+                table.Columns.Add(column);
+
+                column = new DataColumn();
+                column.ColumnName = "Время передачи, с";
+                column.DataType = Type.GetType("System.Decimal");
+                table.Columns.Add(column);
+
+                column = new DataColumn();
+                column.ColumnName = "Лучшее время передачи, с";
+                column.DataType = Type.GetType("System.Decimal");
+                table.Columns.Add(column);
+
+                DataRow row;
+                for (int i = 0; i < 5; i++) {
+                    row = table.NewRow();
+                    row[0] = senderDevices.SelectedItem.ToString();
+                    row[1] = recipientDevices.SelectedItem.ToString();
+                    Random random = new Random();
+                    row[2] = random.Next(50, 1010);
+
+                    var smeg = new int[topologSize, topologSize];
+                    cost = new decimal[topologSize, topologSize];
+
+
+                    Dijkstra.Set(topologSize, smeg, cost);
+                    Dijkstra.Get(connections, smeg, cost, (decimal)row.ItemArray[2]);
+
+                    startVertex = dic.Where(x => x.Value == senderDevices.SelectedItem.ToString()).FirstOrDefault().Key;
+                    secondPointsTimes.Clear();
+                    Dijkstra.Deijkstra(cost, startVertex - 1, topologSize, secondPoints, secondPointsTimes);
+
+                    int index = secondPoints[dic.Where(x => x.Value == recipientDevices.SelectedItem.ToString()).FirstOrDefault().Key];
+                    int time = (int)secondPointsTimes[index];
+                    row[3] = random.Next(time + 10, (time + 10) * 2);
+                    row[4] = time;
+                    table.Rows.Add(row);
+                }
+
+                routStatistics.ItemsSource = table.DefaultView;
             }
         }
     }
