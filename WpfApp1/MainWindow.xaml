@@ -7,6 +7,7 @@
         xmlns:lvc ="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="800" Loaded="Window_Loaded">
+
     <TabControl>
         <TabItem>
             <TabItem.Header>
@@ -94,7 +95,7 @@
                 <Grid Grid.Row="0">
                     <GroupBox Header="Статистика оборудования">
                         <DataGrid x:Name="deviceStatics" AutoGenerateColumns="True">
-                            
+
                         </DataGrid>
                     </GroupBox>
                 </Grid>
@@ -118,11 +119,10 @@
                                 </Grid.RowDefinitions>
                                 <Label Grid.Row="0" Grid.Column="0" Content="Устройство отправитель" HorizontalContentAlignment="Center"/>
                                 <Label Grid.Row="0" Grid.Column="1" Content="Устройство получатель" HorizontalContentAlignment="Center"/>
-                                <Label Grid.Row="0" Grid.Column="2" Content="Объем данных, Мбит" HorizontalContentAlignment="Center"/>
                                 <ComboBox Grid.Row="1" Grid.Column="0" Name="senderDevices" Margin="20,0,20,6" MaxHeight="40" SelectionChanged="senderDevices_SelectionChanged"/>
                                 <ComboBox Grid.Row="1" Grid.Column="1" Name="recipientDevices" Margin="20,0,20,6" MaxHeight="40" SelectionChanged="recipientDevices_SelectionChanged"/>
-                                <TextBox x:Name="dataSize" Text="100000000" Grid.Row="1" Grid.Column="2" Margin="20,0,20,6" MaxHeight="40"/>
-                                <Button x:Name="calcMetrics" Grid.Column="3" Grid.RowSpan="2" Margin="20,10,20,10" Content="Рассчитать" MaxHeight="60"/>
+
+
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
@@ -131,12 +131,12 @@
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
                                     <DataGrid x:Name="routStatistics" AutoGenerateColumns="True" >
-                                        
+
                                     </DataGrid>
                                 </Grid>
-                                <Grid Grid.Column="1">
+                                <Grid Name="speedsChart" Grid.Column="1">
                                     <lvc:CartesianChart  Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" 
-                                        DrawMarginFrame="{Binding Frame}" TooltipPosition="Top"/>
+                                        DrawMarginFrame="{Binding Frame}" TooltipPosition="Top" ZoomMode="X"/>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -144,5 +144,5 @@
                 </Grid>
             </Grid>
         </TabItem>
-    </TabControl>
+    </TabControl>   
 </Window>

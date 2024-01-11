@@ -49,7 +49,7 @@ namespace WpfApp1
 
                 //Нахождение кратчайшего пути
                 for (int i = 0; i < size; i++) {
-                    if (!visited[i] && cost[u, i] != Int32.MaxValue && distance[u] + cost[u, i] < distance[i]) {
+                    if ( cost[u, i] != Int32.MaxValue && distance[u] + cost[u, i] <= distance[i]) {
                         distance[i] = distance[u] + cost[u, i];
                     }
                 }

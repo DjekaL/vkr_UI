@@ -168,13 +168,13 @@ namespace WpfApp1
             secondPoints.Clear();
             secondPointsTimes.Clear();
 
-            topologSize = connections.Count;
+            topologSize = connections.Count / 2 + 1;
             var smeg = new int[topologSize, topologSize];
             cost = new decimal[topologSize, topologSize];
 
 
             Dijkstra.Set(topologSize, smeg, cost);
-            Dijkstra.Get(connections, smeg, cost, int.Parse(dataSize.Text));
+            Dijkstra.Get(connections, smeg, cost, 100);
 
             startVertex = dic.Where(x => x.Value == senderDevices.SelectedItem.ToString()).FirstOrDefault().Key;
 
@@ -191,6 +191,7 @@ namespace WpfApp1
 
         private void recipientDevices_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (recipientDevices.SelectedItem != null) {
+                secondPoints.Clear();
                 DataTable table = new DataTable();
 
                 DataColumn column = new DataColumn();
@@ -216,13 +217,19 @@ namespace WpfApp1
                 column.DataType = Type.GetType("System.Decimal");
                 table.Columns.Add(column);
 
+
+                List<List<decimal>> x = new List<List<decimal>>();
+                List<decimal> realTime = new List<decimal>();
+                List<decimal> perfectTime = new List<decimal>();
+                List<decimal> size = new List<decimal>();
                 DataRow row;
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 10; i++) {
                     row = table.NewRow();
                     row[0] = senderDevices.SelectedItem.ToString();
                     row[1] = recipientDevices.SelectedItem.ToString();
                     Random random = new Random();
                     row[2] = random.Next(50, 1010);
+                    size.Add((decimal)row.ItemArray[2]);
 
                     var smeg = new int[topologSize, topologSize];
                     cost = new decimal[topologSize, topologSize];
@@ -234,15 +241,24 @@ namespace WpfApp1
                     startVertex = dic.Where(x => x.Value == senderDevices.SelectedItem.ToString()).FirstOrDefault().Key;
                     secondPointsTimes.Clear();
                     Dijkstra.Deijkstra(cost, startVertex - 1, topologSize, secondPoints, secondPointsTimes);
-
-                    int index = secondPoints[dic.Where(x => x.Value == recipientDevices.SelectedItem.ToString()).FirstOrDefault().Key];
+                    int ab = dic.Where(x => x.Value == recipientDevices.SelectedItem.ToString()).FirstOrDefault().Key;
+                    int index = secondPoints.IndexOf(dic.Where(x => x.Value == recipientDevices.SelectedItem.ToString()).FirstOrDefault().Key); // искать индекс по значениюя
+                    //int index = ab; // искать индекс по значениюя
                     int time = (int)secondPointsTimes[index];
                     row[3] = random.Next(time + 10, (time + 10) * 2);
+                    realTime.Add((decimal)row.ItemArray[3]);
                     row[4] = time;
+                    perfectTime.Add((decimal)time);
                     table.Rows.Add(row);
                 }
-
+                x.Add(realTime); 
+                x.Add(perfectTime);
                 routStatistics.ItemsSource = table.DefaultView;
+
+                //Charts
+                List<string> names = new List<string> { "Время передачи, с", "Лучшее время передачи, с" };
+                SpeedsChart chart = new SpeedsChart(x, size, names);
+                speedsChart.DataContext = chart;
             }
         }
     }

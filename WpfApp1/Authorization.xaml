@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
         <Label Content="Логин" Grid.Row="2" FontSize="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom"/>
         <Label Content="Пароль" Grid.Row="4" FontSize="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom"/>
-        <TextBox x:Name="login" Grid.Row="3" Width="250" FontSize="25" Margin="0,0,0,10"/>
+        <TextBox Text="user" x:Name="login" Grid.Row="3" Width="250" FontSize="25" Margin="0,0,0,10"/>
         <PasswordBox x:Name="password" Grid.Row="5" Width="250" FontSize="25" Margin="0,0,0,10"/>
         <Button x:Name="authoBut" Grid.Row="6" Width="300" Content="Войти" FontSize="25" Margin="0,5,0,5" Click="authoBut_Click"/>
     </Grid>
