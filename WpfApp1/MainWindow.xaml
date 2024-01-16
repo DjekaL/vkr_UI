@@ -103,7 +103,7 @@
                     <GroupBox Header="Статистика маршрута">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="0.5*"/>
+                                <RowDefinition Height="0.4*"/>
                                 <RowDefinition Height="1.5*"/>
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="0">
@@ -114,8 +114,8 @@
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="0.45*"/>
                                     <RowDefinition Height="0.5*"/>
-                                    <RowDefinition Height="0.75*"/>
                                 </Grid.RowDefinitions>
                                 <Label Grid.Row="0" Grid.Column="0" Content="Устройство отправитель" HorizontalContentAlignment="Center"/>
                                 <Label Grid.Row="0" Grid.Column="1" Content="Устройство получатель" HorizontalContentAlignment="Center"/>
@@ -125,18 +125,41 @@
 
                             </Grid>
                             <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="0">
-                                    <DataGrid x:Name="routStatistics" AutoGenerateColumns="True" >
+                                <Grid>
+                                    <TabControl>
+                                        <TabItem>
+                                            <TabItem.Header>
+                                                <StackPanel>
+                                                    <TextBlock>История маршрута</TextBlock>
+                                                </StackPanel>
+                                            </TabItem.Header>
+                                            <DataGrid x:Name="routStatistics" AutoGenerateColumns="True" >
 
-                                    </DataGrid>
-                                </Grid>
-                                <Grid Name="speedsChart" Grid.Column="1">
-                                    <lvc:CartesianChart  Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" 
-                                        DrawMarginFrame="{Binding Frame}" TooltipPosition="Top" ZoomMode="X"/>
+                                            </DataGrid>
+                                        </TabItem>
+                                        <TabItem>
+                                            <TabItem.Header>
+                                                <StackPanel>
+                                                    <TextBlock>Средняя скорость передачи данных</TextBlock>
+                                                </StackPanel>
+                                            </TabItem.Header>
+                                            <Grid Name="speedsChart" Grid.Column="1">
+                                                <lvc:CartesianChart  Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" 
+                                                    DrawMarginFrame="{Binding Frame}" TooltipPosition="Top" ZoomMode="X"/>
+                                            </Grid>
+                                        </TabItem>
+                                        <TabItem>
+                                            <TabItem.Header>
+                                                <StackPanel>
+                                                    <TextBlock>Время передачи данных</TextBlock>
+                                                </StackPanel>
+                                            </TabItem.Header>
+                                            <Grid Name="timesChart" Grid.Column="1">
+                                                <lvc:CartesianChart  Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" 
+                                                    DrawMarginFrame="{Binding Frame}" TooltipPosition="Top" ZoomMode="X"/>
+                                            </Grid>
+                                        </TabItem>
+                                    </TabControl>
                                 </Grid>
                             </Grid>
                         </Grid>

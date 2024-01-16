@@ -208,12 +208,17 @@ namespace WpfApp1
                 table.Columns.Add(column);
 
                 column = new DataColumn();
+                column.ColumnName = @"Средняя скорость передачи данных, Мбит\с";
+                column.DataType = Type.GetType("System.Decimal");
+                table.Columns.Add(column);
+
+                column = new DataColumn();
                 column.ColumnName = "Время передачи, с";
                 column.DataType = Type.GetType("System.Decimal");
                 table.Columns.Add(column);
 
                 column = new DataColumn();
-                column.ColumnName = "Лучшее время передачи, с";
+                column.ColumnName = "Теоритическое время передачи, с";
                 column.DataType = Type.GetType("System.Decimal");
                 table.Columns.Add(column);
 
@@ -221,6 +226,7 @@ namespace WpfApp1
                 List<List<decimal>> x = new List<List<decimal>>();
                 List<decimal> realTime = new List<decimal>();
                 List<decimal> perfectTime = new List<decimal>();
+                List<decimal> speeds = new List<decimal>();
                 List<decimal> size = new List<decimal>();
                 DataRow row;
                 for (int i = 0; i < 10; i++) {
@@ -228,26 +234,31 @@ namespace WpfApp1
                     row[0] = senderDevices.SelectedItem.ToString();
                     row[1] = recipientDevices.SelectedItem.ToString();
                     Random random = new Random();
-                    row[2] = random.Next(50, 1010);
-                    size.Add((decimal)row.ItemArray[2]);
+                    decimal dataSize = random.Next(50, 1010);
+                    row[2] = dataSize;
+                    size.Add(dataSize);
 
                     var smeg = new int[topologSize, topologSize];
                     cost = new decimal[topologSize, topologSize];
 
 
                     Dijkstra.Set(topologSize, smeg, cost);
-                    Dijkstra.Get(connections, smeg, cost, (decimal)row.ItemArray[2]);
+                    Dijkstra.Get(connections, smeg, cost, dataSize);
 
                     startVertex = dic.Where(x => x.Value == senderDevices.SelectedItem.ToString()).FirstOrDefault().Key;
                     secondPointsTimes.Clear();
                     Dijkstra.Deijkstra(cost, startVertex - 1, topologSize, secondPoints, secondPointsTimes);
                     int ab = dic.Where(x => x.Value == recipientDevices.SelectedItem.ToString()).FirstOrDefault().Key;
-                    int index = secondPoints.IndexOf(dic.Where(x => x.Value == recipientDevices.SelectedItem.ToString()).FirstOrDefault().Key); // искать индекс по значениюя
-                    //int index = ab; // искать индекс по значениюя
-                    int time = (int)secondPointsTimes[index];
-                    row[3] = random.Next(time + 10, (time + 10) * 2);
-                    realTime.Add((decimal)row.ItemArray[3]);
-                    row[4] = time;
+                    int index = secondPoints.IndexOf(dic.Where(x => x.Value == recipientDevices.SelectedItem.ToString()).FirstOrDefault().Key); 
+                    decimal time = Math.Round(secondPointsTimes[index], 1);
+                    double coef = (double)dataSize / 100;
+                    decimal MonitTime = Math.Round((decimal)(random.NextDouble() * (((double)time + 10) - ((double)time + 2)) + (double)time + 2), 1);
+                    decimal speed = Math.Round(dataSize / MonitTime);
+                    row[3] = speed;
+                    speeds.Add(speed);
+                    realTime.Add(MonitTime);
+                    row[4] = MonitTime;
+                    row[5] = time;
                     perfectTime.Add((decimal)time);
                     table.Rows.Add(row);
                 }
@@ -255,9 +266,14 @@ namespace WpfApp1
                 x.Add(perfectTime);
                 routStatistics.ItemsSource = table.DefaultView;
 
-                //Charts
+                // Times charts
                 List<string> names = new List<string> { "Время передачи, с", "Лучшее время передачи, с" };
                 SpeedsChart chart = new SpeedsChart(x, size, names);
+                timesChart.DataContext = chart;
+
+                // Speed chart
+                names = new List<string> { "Скорость передачи" };
+                chart = new SpeedsChart(speeds, size, names);
                 speedsChart.DataContext = chart;
             }
         }
