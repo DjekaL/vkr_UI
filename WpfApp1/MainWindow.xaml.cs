@@ -208,7 +208,7 @@ namespace WpfApp1
                 table.Columns.Add(column);
 
                 column = new DataColumn();
-                column.ColumnName = @"Средняя скорость передачи данных, Мбит\с";
+                column.ColumnName = "Средняя скорость передачи данных";
                 column.DataType = Type.GetType("System.Decimal");
                 table.Columns.Add(column);
 
@@ -218,7 +218,7 @@ namespace WpfApp1
                 table.Columns.Add(column);
 
                 column = new DataColumn();
-                column.ColumnName = "Теоритическое время передачи, с";
+                column.ColumnName = "теоретическое время передачи, с";
                 column.DataType = Type.GetType("System.Decimal");
                 table.Columns.Add(column);
 
@@ -265,6 +265,7 @@ namespace WpfApp1
                 x.Add(realTime); 
                 x.Add(perfectTime);
                 routStatistics.ItemsSource = table.DefaultView;
+                routStatistics.Columns[3].Header = "Средняя скорость передачи данных, Мбит/с";
 
                 // Times charts
                 List<string> names = new List<string> { "Время передачи, с", "Лучшее время передачи, с" };
