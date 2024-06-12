@@ -5,9 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="AdminWindow" Height="450" Width="800">
+        Title="AdminWindow" Height="450" Width="800" Loaded="Window_Loaded">
     <Grid>
-        <TabControl>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="51*"/>
+            <ColumnDefinition Width="349*"/>
+        </Grid.ColumnDefinitions>
+        <TabControl Grid.ColumnSpan="2">
             <TabItem>
                 <TabItem.Header>
                     <StackPanel>
@@ -72,7 +76,7 @@
                                 </StackPanel>
                             </TabItem.Header>
                             <Grid>
-                                
+
                             </Grid>
                         </TabItem>
                     </TabControl>
@@ -156,6 +160,186 @@
                         </GroupBox>
                     </Grid>
                 </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock>Настройка топологии</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <TabControl>
+                    <TabItem>
+                        <TabItem.Header>
+                            <StackPanel>
+                                <TextBlock>Типы устройств</TextBlock>
+                            </StackPanel>
+                        </TabItem.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="Добавить тип">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="Тип устройства" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBox x:Name="DeviceTypeToAdd" Grid.Column="1"  VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="100" MinHeight="20"/>
+                                    <Button Grid.Column="2" Content="Добавить" x:Name="AddDeviceType" HorizontalAlignment="Center" VerticalAlignment="Center" Click="AddDeviceType_Click"/>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="Редактировать тип">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Content="Тип" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Row="1" x:Name="DeviceTypesToUpdate" VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="150" Loaded="DeviceTypesToUpdate_Loaded" SelectionChanged="DeviceTypesToUpdate_SelectionChanged"/>
+                                    </Grid>
+                                    <Grid Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Content="Новое название" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                        <TextBox Grid.Row="1" x:Name="NewDeviceTypeTitle" VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="100" MinHeight="20"/>
+                                    </Grid>
+                                    <Button Grid.Column="2" x:Name="UpdateDeviceType" Content="Сохранить" VerticalAlignment="Center" HorizontalAlignment="Center" Click="UpdateDeviceType_Click"/>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="Удалить тип">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox Grid.Column="0" x:Name="DeviceTypeToDelete" VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="100" Loaded="DeviceTypeToDelete_Loaded"/>
+                                    <Button Grid.Column="1" Name="DeleteDeviceType" Content="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center" Click="DeleteDeviceType_Click"/>
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
+                    </TabItem>
+                    <TabItem x:Name="DevicesSettings" Loaded="DevicesSettings_Loaded">
+                        <TabItem.Header>
+                            <StackPanel>
+                                <TextBlock>Устройства</TextBlock>
+                            </StackPanel>
+                        </TabItem.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <GroupBox Grid.Row="0" Header="Добавить Устройство">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2.5*"/>
+                                        <ColumnDefinition Width="0.5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <DataGrid Grid.Column="0" x:Name="NewDeviceTable" ItemsSource="{Binding Source=NewDevices}" AutoGenerateColumns="False" CanUserAddRows="True">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}" Header="Название" Width="*"/>
+                                            <DataGridComboBoxColumn x:Name="DeviceTypes" SelectedItemBinding="{Binding Path=Type, UpdateSourceTrigger=PropertyChanged}" Width="*" Header="Тип"/>
+                                            <DataGridTextColumn Binding="{Binding Path=IP,UpdateSourceTrigger=PropertyChanged}" Header="Ip" Width="*"/>
+                                        </DataGrid.Columns>
+
+                                    </DataGrid>
+                                    <Button Grid.Column="2" Content="Добавить" x:Name="AddDevice" HorizontalAlignment="Center" VerticalAlignment="Center" Click="AddDevice_Click"/>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Header="Редактировать устройство">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <!--<ColumnDefinition Width="0.5*"/>-->
+                                        <ColumnDefinition Width="2.5*"/>
+                                        <ColumnDefinition Width="0.5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!--<Grid Grid.Column="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Content="Устройство" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <ComboBox Grid.Row="1" x:Name="DevicesToUpdate" VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="100"/>
+                                    </Grid>
+                                    -->
+                                    <DataGrid Grid.Column="0" x:Name="CurrentDevicesTable" ItemsSource="{Binding Source=CurrentDevices}" AutoGenerateColumns="False" CanUserAddRows="True">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}" Header="Название" Width="*"/>
+                                            <DataGridComboBoxColumn x:Name="CurrentDeviceType" SelectedItemBinding="{Binding Path=Type, UpdateSourceTrigger=PropertyChanged}" Width="*" Header="Тип"/>
+                                            <DataGridTextColumn Binding="{Binding Path=IP,UpdateSourceTrigger=PropertyChanged}" Header="Ip" Width="*"/>
+                                        </DataGrid.Columns>
+
+                                    </DataGrid>
+                                    <Button Grid.Column="1" Content="Сохранить" x:Name="UpdateDevice" HorizontalAlignment="Center" VerticalAlignment="Center" Click="UpdateDevice_Click"/>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="2" Header="Удалить Устройство">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox Grid.Column="0" x:Name="DeviceToDelet" VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="100" Loaded="DeviceToDelet_Loaded"/>
+                                    <Button Grid.Column="1" Name="DeleteDevice" Content="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center" Click="DeleteDevice_Click"/>
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
+                    </TabItem>
+                    <TabItem x:Name="DevicesConections" Loaded="DevicesConections_Loaded">
+                        <TabItem.Header>
+                            <StackPanel>
+                                <TextBlock>Связи устройств</TextBlock>
+                            </StackPanel>
+                        </TabItem.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="0.1*"/>
+                            </Grid.RowDefinitions>
+                            <DataGrid Grid.Row="0" x:Name="DevicesConnections" ItemsSource="{Binding Source=CurrentDevicesConections}" AutoGenerateColumns="False" CanUserAddRows="True">
+                                <DataGrid.Columns>
+                                    <DataGridComboBoxColumn x:Name="FirstDevice" SelectedItemBinding="{Binding Path=FirstDevices, UpdateSourceTrigger=PropertyChanged}" Width="*" Header="Устройтсво">
+                                        <DataGridComboBoxColumn.EditingElementStyle>
+                                            <Style TargetType="{x:Type ComboBox}">
+                                                <EventSetter Event="SelectionChanged" Handler="FirstDevice_SelectionChanged" />
+                                            </Style>
+                                        </DataGridComboBoxColumn.EditingElementStyle>
+                                    </DataGridComboBoxColumn>
+                                    <!--<DataGridComboBoxColumn x:Name="SecondDevice" SelectedItemBinding="{Binding Path=SecondDevices, UpdateSourceTrigger=PropertyChanged}" Width="*" Header="Устройтсво"/>-->
+                                    <DataGridTemplateColumn Header="Устройство" Width="*" >
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox x:Name="SecDevices" ItemsSource="{Binding SecDev}" IsSynchronizedWithCurrentItem="True" SelectedItem="{Binding Sec, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="SecondDevices" SelectionChanged="SecDevices_SelectionChanged" PreviewMouseLeftButtonUp="SecDevices_PreviewMouseLeftButtonUp"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Binding="{Binding Path=Speed,UpdateSourceTrigger=PropertyChanged}" Header="Скорость передачи, Мб/с" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" x:Name="SaveDevicesConections" Content="Сохранить" VerticalAlignment="Center" HorizontalAlignment="Center" MinHeight="20" MinWidth="100" Click="SaveDevicesConections_Click"/>
+                            <Button Grid.Column="1" x:Name="DeleteDeveiceConection" Content="Удалить" VerticalAlignment="Center" HorizontalAlignment="Center" MinHeight="20" MinWidth="100" Click="DeleteDeveiceConection_Click"/>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
             </TabItem>
         </TabControl>
     </Grid>

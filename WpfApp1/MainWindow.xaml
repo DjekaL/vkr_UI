@@ -18,15 +18,35 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="0.5*" MaxWidth="300"/>
+                    <ColumnDefinition Width="0.3*" MaxWidth="300"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="0.5*"/>
+                        <RowDefinition Height="0.2*"/>
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
-                    <GroupBox Content="График интенсивности нагрузки" Grid.Row="1">
-
+                    <GroupBox Header="График интенсивности нагрузки" Grid.Row="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.1*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <ComboBox Grid.Row="0"/>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <lvc:CartesianChart Grid.Row="0" Grid.Column="0" x:Name="ProccesorTime" Series="{Binding ProccesorSeriece}" ZoomMode="X" LegendPosition="Bottom"/>
+                                <lvc:CartesianChart Grid.Row="0" Grid.Column="1" x:Name="MemoryUsage" Series="{Binding MemorySeriece}" ZoomMode="X" LegendPosition="Bottom"/>
+                                <lvc:CartesianChart Grid.Row="1" Grid.Column="0" x:Name="Diskime" Series="{Binding DiskSeriece}" ZoomMode="X" LegendPosition="Bottom"/>
+                                <lvc:CartesianChart Grid.Row="1" Grid.Column="1" x:Name="Network" Series="{Binding NetworkSeriece}" ZoomMode="X" LegendPosition="Bottom"/>
+                            </Grid>
+                        </Grid>
                     </GroupBox>
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
@@ -37,14 +57,18 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <GroupBox Background="LightGreen" Margin="50,10,50,10" BorderBrush="White" Grid.Column="0">
-                            <Label Content="Устройства в сети" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Margin="10"/>
+                        <GroupBox Background="LightGreen" HorizontalAlignment="Center" VerticalAlignment="Center"  BorderBrush="White" Grid.Column="0">
+                            <Label Content="Устройства в сети" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </GroupBox>
-                        <GroupBox Background="LightPink" Margin="50,10,50,10" BorderBrush="White" Grid.Column="1">
-                            <Label Content="Устройства не в сети" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Margin="10"/>
+                        <GroupBox Background="LightPink" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="White" Grid.Column="1">
+                            <Label Content="Устройства не в сети" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </GroupBox>
-                        <TextBox x:Name="onlineDevices" Text="fgsf" Margin="20,10,20,20" Grid.Column="0" Grid.Row="1" TextAlignment="Center" BorderBrush="White" IsEnabled="False"/>
-                        <TextBox x:Name="offlineDevices" Text="gdf" Margin="20,10,20,20" Grid.Column="1" Grid.Row="1" TextAlignment="Center" BorderBrush="White" IsEnabled="False"/>
+                        <TextBox x:Name="onlineDevices" Text="fgsf" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="20" Grid.Column="0" Grid.Row="1" TextAlignment="Center" BorderBrush="White" IsEnabled="False"/>
+                        <TextBox x:Name="offlineDevices" Text="gdf" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="20" Grid.Column="1" Grid.Row="1" TextAlignment="Center" BorderBrush="White" IsEnabled="False"/>
+                        
+                            <Button Grid.Column="0" Width="100" Height="20" Content="start" x:Name="start" Click="start_Click"/>
+                            <Button Grid.Column="1" Width="100" Height="20" Content="end" x:Name="end" Click="end_Click"/>
+                       
                     </Grid>
                 </Grid>
                 <TabControl Grid.Column="1" TabStripPlacement="Right">
@@ -70,6 +94,28 @@
                                 <TextBlock>Лог состояния</TextBlock>
                             </StackPanel>
                         </TabItem.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBox Grid.Row="0" x:Name="logOfSomething" Text="{Binding Path=Log}"/>
+                            <Label Grid.Row="1" x:Name="LastPolling" Content="{Binding Path=LastPolling}"/>
+                            <Label Grid.Row="2" x:Name="NextPolling" Content="{Binding Path=NextPolling}"/>
+                            <Label Grid.Row="3" Content="Устройства не в сети:"/>
+                            <Grid Grid.Row="4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" x:Name="OfflineDevicesNames" Text="{Binding Path=AFKDevicesNames}"/>
+                                <TextBox Grid.Column="1" x:Name="OfflineDevicesTimes" Text="{Binding Path=AFKDevicesTimes}"/>
+                            </Grid>
+                        </Grid>
+                        
                     </TabItem>
                     <TabItem>
                         <TabItem.Header>
@@ -94,8 +140,10 @@
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <GroupBox Header="Статистика оборудования">
-                        <DataGrid x:Name="deviceStatics" AutoGenerateColumns="True">
-
+                        <DataGrid x:Name="deviceStatics" ItemsSource="{Binding DevicesStats}" AutoGenerateColumns="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn/>
+                            </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
                 </Grid>
@@ -119,10 +167,10 @@
                                 </Grid.RowDefinitions>
                                 <Label Grid.Row="0" Grid.Column="0" Content="Устройство отправитель" HorizontalContentAlignment="Center"/>
                                 <Label Grid.Row="0" Grid.Column="1" Content="Устройство получатель" HorizontalContentAlignment="Center"/>
+                                <Label Grid.Row="0" Grid.Column="2" Content="Период" HorizontalContentAlignment="Center"/>
                                 <ComboBox Grid.Row="1" Grid.Column="0" Name="senderDevices" Margin="20,0,20,6" MaxHeight="40" SelectionChanged="senderDevices_SelectionChanged"/>
                                 <ComboBox Grid.Row="1" Grid.Column="1" Name="recipientDevices" Margin="20,0,20,6" MaxHeight="40" SelectionChanged="recipientDevices_SelectionChanged"/>
-
-
+                                <ComboBox Grid.Row="1" Grid.Column="2" Name="StatisticalPeriod" Margin="20,0,20,6" MaxHeight="40" SelectionChanged="StatisticalPeriod_SelectionChanged" />
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Grid>
@@ -144,7 +192,7 @@
                                                 </StackPanel>
                                             </TabItem.Header>
                                             <Grid Name="speedsChart" Grid.Column="1">
-                                                <lvc:CartesianChart  Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" 
+                                                <lvc:CartesianChart  Series="{Binding SpeedlineChart}" XAxes="{Binding SpeedlineXAxes}" YAxes="{Binding SpeedlineYAxes}" 
                                                     DrawMarginFrame="{Binding Frame}" TooltipPosition="Top" ZoomMode="X"/>
                                             </Grid>
                                         </TabItem>
@@ -155,7 +203,7 @@
                                                 </StackPanel>
                                             </TabItem.Header>
                                             <Grid Name="timesChart" Grid.Column="1">
-                                                <lvc:CartesianChart  Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" 
+                                                <lvc:CartesianChart  Series="{Binding TimelineChart}" XAxes="{Binding TimelineXAxes}" YAxes="{Binding TimelineYAxes}" 
                                                     DrawMarginFrame="{Binding Frame}" TooltipPosition="Top" ZoomMode="X"/>
                                             </Grid>
                                         </TabItem>

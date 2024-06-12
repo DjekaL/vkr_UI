@@ -219,13 +219,13 @@
     "firstDevice": 37,
     "secondDevice": 10,
     "weight": 100,
-    "name": "Мониторинг1"
+    "name": "Мониторинг_1"
   },
   {
     "firstDevice": 38,
     "secondDevice": 10,
     "weight": 100,
-    "name": "Мониторинг2"
+    "name": "Мониторинг_2"
   },
   {
     "firstDevice": 39,

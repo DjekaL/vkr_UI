@@ -4,28 +4,22 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using WpfApp1.Confuguration;
+using WpfApp1.Models;
 
-namespace WpfApp1
-{
+namespace WpfApp1 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
-    {
+    public partial class MainWindow : Window {
         string _userCat = "";
         int topologSize = 0;
         int startVertex = 0;
+        //public bool _isGetPerfomance = false;
+        MainWindowDataModel _mainDataModel = new();
 
         Dictionary<int, string> dic = new Dictionary<int, string>();
         List<int> secondPoints = new List<int>();
@@ -33,8 +27,10 @@ namespace WpfApp1
         decimal[,] cost;
         List<Connection> connections;
 
-        public MainWindow()
-        {
+        ApplicationContext _context = new ApplicationContext();
+        SQLiteHeper _db;
+
+        public MainWindow() {
             InitializeComponent();
             Authorization authorization = new Authorization();
             authorization.ShowDialog();
@@ -47,6 +43,9 @@ namespace WpfApp1
             if (_userCat == "") {
                 this.Close();
             }
+            this.DataContext = _mainDataModel;
+
+            _db = new SQLiteHeper(_context);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
@@ -162,6 +161,12 @@ namespace WpfApp1
                 senderDevices.Items.Add(item);
             }
 
+            //Опрос
+            DevicePolling polling = new DevicePolling(_mainDataModel, 5000, new List<string> { "192.168.3.2", "123", "342" });
+            polling.StartDevicePolling();
+
+            //Графики маршрутов
+            StatisticalPeriod.ItemsSource = new List<string>() { "День", "Неделя", "Месяц" };
         }
         private void senderDevices_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             recipientDevices.Items.Clear();
@@ -180,7 +185,7 @@ namespace WpfApp1
 
             Dijkstra.Deijkstra(cost, startVertex - 1, topologSize, secondPoints, secondPointsTimes);
 
-            foreach(var point in secondPoints) {
+            foreach (var point in secondPoints) {
                 if (dic.ContainsKey(point)) {
                     recipientDevices.Items.Add(dic[point]);
                     /*secondPoints.RemoveAt(point);
@@ -249,7 +254,7 @@ namespace WpfApp1
                     secondPointsTimes.Clear();
                     Dijkstra.Deijkstra(cost, startVertex - 1, topologSize, secondPoints, secondPointsTimes);
                     int ab = dic.Where(x => x.Value == recipientDevices.SelectedItem.ToString()).FirstOrDefault().Key;
-                    int index = secondPoints.IndexOf(dic.Where(x => x.Value == recipientDevices.SelectedItem.ToString()).FirstOrDefault().Key); 
+                    int index = secondPoints.IndexOf(dic.Where(x => x.Value == recipientDevices.SelectedItem.ToString()).FirstOrDefault().Key);
                     decimal time = Math.Round(secondPointsTimes[index], 1);
                     double coef = (double)dataSize / 100;
                     decimal MonitTime = Math.Round((decimal)(random.NextDouble() * (((double)time + 10) - ((double)time + 2)) + (double)time + 2), 1);
@@ -262,7 +267,7 @@ namespace WpfApp1
                     perfectTime.Add((decimal)time);
                     table.Rows.Add(row);
                 }
-                x.Add(realTime); 
+                x.Add(realTime);
                 x.Add(perfectTime);
                 routStatistics.ItemsSource = table.DefaultView;
                 routStatistics.Columns[3].Header = "Средняя скорость передачи данных, Мбит/с";
@@ -270,13 +275,39 @@ namespace WpfApp1
                 // Times charts
                 List<string> names = new List<string> { "Время передачи, с", "Лучшее время передачи, с" };
                 SpeedsChart chart = new SpeedsChart(x, size, names);
-                timesChart.DataContext = chart;
+                //timesChart.DataContext = chart;
 
                 // Speed chart
                 names = new List<string> { "Скорость передачи" };
                 chart = new SpeedsChart(speeds, size, names);
-                speedsChart.DataContext = chart;
+                //speedsChart.DataContext = chart;
             }
+        }
+
+        PerfomanceReciever perf;
+        private void start_Click(object sender, RoutedEventArgs e) {
+            //isRun = true;
+            perf = new PerfomanceReciever(_mainDataModel);
+            Task.Run(() => {
+                _mainDataModel.isGetPerfomance = true;
+                perf.RecieverStart();
+                PerfomanceChart chart = new PerfomanceChart();
+
+            });
+        }
+
+        private void end_Click(object sender, RoutedEventArgs e) {
+            //isRun = false;
+            _mainDataModel.isGetPerfomance = false;
+            perf.IsContinue = false;
+        }
+
+        private void StatisticalPeriod_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            List<int> time = new List<int>();
+            List<int> size = new List<int>();
+            _db.GetStatistic(StatisticalPeriod.SelectedItem.ToString(), senderDevices.SelectedItem.ToString(), recipientDevices.SelectedItem.ToString(), time, size);
+            _mainDataModel.GetStatisticCharts(StatisticalPeriod.SelectedItem.ToString(), time, size);
+            
         }
     }
 }

@@ -5,6 +5,7 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace WpfApp1 {
     internal class SpeedsChart {
@@ -17,6 +18,7 @@ namespace WpfApp1 {
                 Color = new(0, 0, 0)
             }
         };
+        public SpeedsChart() { }
         public SpeedsChart(List<List<decimal>> y, List<decimal> xPoints, List<string> serieName) {
             Series = new ObservableCollection<ISeries>();
             List<string> labels = new List<string>();
@@ -86,6 +88,29 @@ namespace WpfApp1 {
             serie.YToolTipLabelFormatter = (chartPoint) => $"{chartPoint.Coordinate.PrimaryValue}";
             serie.XToolTipLabelFormatter = (chartPoint) => $"{XAxes[0].Name}: {XAxes[0].Labels.ElementAt((System.Index)chartPoint.Coordinate.SecondaryValue)}";
             Series.Add(serie);
+
+        }
+
+        public void GetTimeLine(ISeries[] Series, Axis[] xAxes, Axis[] yAxes, List<int> time, List<int> size, List<string> serieNames) {
+            int k = 0;
+            foreach (ColumnSeries<int> serie in Series) {
+                serie.Values = new ObservableCollection<int>();
+                List<string> labels = new List<string>();
+                foreach (var item in size) {
+                    labels.Add(item.ToString());
+                }
+                xAxes[0].Labels = labels;
+                
+                foreach (int i in time) {
+                    (serie.Values as ObservableCollection<int>).Add(i);
+                }
+
+                //serie.IgnoresBarPosition = true;
+                serie.Name = serieNames[k];
+                k++;
+                serie.YToolTipLabelFormatter = (chartPoint) => $"{chartPoint.Coordinate.PrimaryValue}";
+                serie.XToolTipLabelFormatter = (chartPoint) => $"{xAxes[0].Name}: {xAxes[0].Labels.ElementAt((System.Index)chartPoint.Coordinate.SecondaryValue)}";
+            }
 
         }
     }
