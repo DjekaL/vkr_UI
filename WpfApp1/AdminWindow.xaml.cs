@@ -165,8 +165,8 @@ namespace WpfApp1 {
         }
 
         private void SaveDevicesConections_Click(object sender, RoutedEventArgs e) {
-            _db.UpdateConnections(CurrentDevicesConections);
             ReflectConnections();
+            _db.UpdateConnections(CurrentDevicesConections);
             AddRemoteConnections();
             DevicesConections_Loaded(sender, e);
         }
@@ -232,11 +232,13 @@ namespace WpfApp1 {
         public Dictionary<int, string> Fdevices = new Dictionary<int, string>();
         public Dictionary<int, string> Sdevices = new Dictionary<int, string>();
         public Dictionary<int, int> Connections = new Dictionary<int, int>();
-        public Dictionary<int, int> ConSpeed = new Dictionary<int, int>();
+        public Dictionary<int, double> ConSpeed = new Dictionary<int, double>();
         public List<List<int>> smeg = new List<List<int>>();
-        public List<List<int>> cost = new List<List<int>>();
-        public List<int> distance;
+        public List<List<double>> cost = new List<List<double>>();
+        public List<double> distance;
+        public List<int> amount;
         public List<bool> IsVisited;
+        private double size = 1000;
 
         ObservableCollection<Connecctions> Connecctions;
 
@@ -259,13 +261,13 @@ namespace WpfApp1 {
                 }
             }
             smeg = new List<List<int>>(Devices.Count);
-            cost = new List<List<int>>(Devices.Count);
+            cost = new List<List<double>>(Devices.Count);
         }
 
         public void Initial() {
             foreach (int i in Devices.Keys) {
                 smeg.Add(new List<int>());
-                cost.Add(new List<int>());
+                cost.Add(new List<double>());
                 foreach (int j in Devices.Keys) {
                     smeg[i].Add(0);
                     cost[i].Add(0);
@@ -285,16 +287,18 @@ namespace WpfApp1 {
                 var i = Devices.FirstOrDefault(x => x.Value == con.FirstDevices).Key;
                 var j = Devices.FirstOrDefault(x => x.Value == con.Sec.SecondDevices).Key;
                 smeg[i][j] = 1;
-                cost[i][j] = Convert.ToInt32(con.Speed);
+                cost[i][j] = size / Convert.ToInt32(con.Speed);
             }
         }
 
         public ObservableCollection<Connecctions> MainAlg(int FirstDevId) {
-            distance = new List<int>();
+            distance = new List<double>();
+            amount = new List<int>();
             IsVisited = new List<bool>();
 
             foreach (int i in Devices.Keys) {
-                distance.Add(Int32.MaxValue);
+                distance.Add(double.MaxValue);
+                amount.Add(0);
                 IsVisited.Add(false);
             }
 
@@ -305,23 +309,29 @@ namespace WpfApp1 {
                 IsVisited[u] = true;
 
                 foreach (int i in Devices.Keys) {
-                    if (!IsVisited[i] && cost[u][i] != 0 && distance[u] != Int32.MaxValue && distance[u] + cost[u][i] < distance[i]) {
-                        distance[i] = distance[u] + cost[u][i];
+                    if (!IsVisited[i] && cost[u][i] != 0 && distance[u] != double.MaxValue && distance[u] + cost[u][i] < distance[i]) {
+                        if (distance[u] == 0) {
+                            distance[i] = distance[u] + cost[u][i];
+                            amount[i]++;
+                        } else {
+                            distance[i] = distance[u] + cost[u][i];
+                            amount[i] += amount[u] + 1;
+                        }
                     }
                 }
             }
 
             ObservableCollection<Connecctions> newCons = new ObservableCollection<Connecctions>();
             foreach (int i in Devices.Keys) {
-                if (distance[i] != Int32.MaxValue && distance[i] != 0) {
-                    newCons.Add(new Connecctions { FirstDevices = Devices[FirstDevId], Sec = new SecDev { SecondDevices = Devices[i] }, Speed = distance[i].ToString(), IsVisible = false });
+                if (distance[i] != double.MaxValue && distance[i] != 0) {
+                    newCons.Add(new Connecctions { FirstDevices = Devices[FirstDevId], Sec = new SecDev { SecondDevices = Devices[i] }, Speed = (amount[i] * size / distance[i]).ToString(), IsVisible = false });
                 }
             }
             return newCons;
         }
 
         private int GetMinimuDistance() {
-            int min = Int32.MaxValue;
+            double min = Double.MaxValue;
             int minIndex = -1;
 
             foreach (int i in Devices.Keys) {

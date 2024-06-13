@@ -187,7 +187,7 @@ namespace WpfApp1.Confuguration {
         }
 
         public ObservableCollection<Connecctions> GetConnections() {
-            var connections = _context.Connections.Where(x => x.IsVisible == true);
+            var connections = _context.Connections.Where(x => x.IsVisible == true).OrderBy(x => x.FirstDeviceId);
             var currentConnectionss = new ObservableCollection<Connecctions>();
             foreach (var con in connections) {
                 currentConnectionss.Add(new Connecctions { FirstDevices = con.FirstDevice.Name, SecDev = new ObservableCollection<SecDev> { new SecDev { SecondDevices = con.SecondDevice.Name} }, Sec = new SecDev { SecondDevices = con.SecondDevice.Name}, Speed = con.DataTransferingSpeed.ToString() });
