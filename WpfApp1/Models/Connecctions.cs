@@ -59,12 +59,12 @@ namespace WpfApp1.Models {
             }
         }
 
-        public bool IsChanged { get; set; } = false;
+        public bool IsVisible { get; set; } = true;
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            IsChanged = true;
+            IsVisible = true;
         }
 
     }

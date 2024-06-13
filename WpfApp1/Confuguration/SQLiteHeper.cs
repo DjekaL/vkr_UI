@@ -206,13 +206,16 @@ namespace WpfApp1.Confuguration {
             var currentConnections = _context.Connections;
             List<Models.Connection> newConnections = new List<Models.Connection>();
             foreach (var con in connections) {
-                bool isExists = true;
+                bool isExists = false;
                 foreach(var curCon in currentConnections) {
                     if (curCon.FirstDevice.Name == con.FirstDevices && curCon.SecondDevice.Name == con.Sec.SecondDevices && curCon.DataTransferingSpeed.ToString() != con.SecDevice) {
                         curCon.DataTransferingSpeed = double.Parse(con.Speed);
+                        isExists = true;
+                        break;
                     }
                     if ((curCon.FirstDevice.Name != con.FirstDevices && curCon.SecondDevice.Name != con.Sec.SecondDevices) ||
-                        (curCon.FirstDevice.Name == con.FirstDevices && curCon.SecondDevice.Name != con.Sec.SecondDevices)) {
+                        (curCon.FirstDevice.Name == con.FirstDevices && curCon.SecondDevice.Name != con.Sec.SecondDevices) ||
+                        (curCon.FirstDevice.Name != con.FirstDevices && curCon.SecondDevice.Name == con.Sec.SecondDevices)) {
                         isExists = false;
                     } else {
                         isExists = true;
@@ -221,10 +224,10 @@ namespace WpfApp1.Confuguration {
                 if (!isExists) {
                     var FDId = _context.Devices.AsNoTracking().FirstOrDefault(d => d.Name == con.FirstDevices).Id;
                     var SDId = _context.Devices.AsNoTracking().FirstOrDefault(d => d.Name == con.Sec.SecondDevices).Id;
-                    currentConnections.Add(new Models.Connection { FirstDeviceId = FDId, SecondDeviceId = SDId, DataTransferingSpeed = double.Parse(con.Speed) });
+                    currentConnections.Add(new Models.Connection { FirstDeviceId = FDId, SecondDeviceId = SDId, DataTransferingSpeed = double.Parse(con.Speed), IsVisible = con.IsVisible });
                 }
             }
-
+            _context.SaveChanges();
         }
     }
 }
