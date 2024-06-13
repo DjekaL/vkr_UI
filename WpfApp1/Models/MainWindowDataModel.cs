@@ -1,8 +1,12 @@
-﻿using LiveChartsCore;
+﻿using HarfBuzzSharp;
+using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using WpfApp1.Confuguration;
 
 namespace WpfApp1.Models {
     public class MainWindowDataModel : INotifyPropertyChanged {
@@ -142,5 +146,15 @@ namespace WpfApp1.Models {
             }
             speedsChart.GetTimeLine(SpeedlineChart, SpeedlineXAxes, SpeedlineYAxes, speed, size, SpeedLineSerieNames);
         }
+        public ObservableCollection<DeviceStatus> DeviceStats {
+            get {
+                return _deviceStats;
+            }
+            set { 
+                _deviceStats = value;
+                OnPropertyChanged("DeviceStats");
+            } 
+        } 
+        private ObservableCollection<DeviceStatus> _deviceStats = new ObservableCollection<DeviceStatus>();
     }
 }

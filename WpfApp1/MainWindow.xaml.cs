@@ -309,5 +309,12 @@ namespace WpfApp1 {
             _mainDataModel.GetStatisticCharts(StatisticalPeriod.SelectedItem.ToString(), time, size);
             
         }
+
+        private void TabItem_Loaded(object sender, RoutedEventArgs e) {
+            Task.Run(() => {
+                _mainDataModel.DeviceStats = _db.GetDeviceStats();
+            });
+            //deviceStatics.ItemsSource = _mainDataModel.DeviceStats;
+        }
     }
 }

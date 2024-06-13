@@ -190,7 +190,7 @@ namespace WpfApp1.Confuguration {
             var connections = _context.Connections.Where(x => x.IsVisible == true).OrderBy(x => x.FirstDeviceId);
             var currentConnectionss = new ObservableCollection<Connecctions>();
             foreach (var con in connections) {
-                currentConnectionss.Add(new Connecctions { FirstDevices = con.FirstDevice.Name, SecDev = new ObservableCollection<SecDev> { new SecDev { SecondDevices = con.SecondDevice.Name} }, Sec = new SecDev { SecondDevices = con.SecondDevice.Name}, Speed = con.DataTransferingSpeed.ToString() });
+                currentConnectionss.Add(new Connecctions { FirstDevices = con.FirstDevice.Name, SecDev = new ObservableCollection<SecDev> { new SecDev { SecondDevices = con.SecondDevice.Name } }, Sec = new SecDev { SecondDevices = con.SecondDevice.Name }, Speed = con.DataTransferingSpeed.ToString() });
             }
             return currentConnectionss;
         }
@@ -207,7 +207,7 @@ namespace WpfApp1.Confuguration {
             List<Models.Connection> newConnections = new List<Models.Connection>();
             foreach (var con in connections) {
                 bool isExists = false;
-                foreach(var curCon in currentConnections) {
+                foreach (var curCon in currentConnections) {
                     if (curCon.FirstDevice.Name == con.FirstDevices && curCon.SecondDevice.Name == con.Sec.SecondDevices && curCon.DataTransferingSpeed.ToString() != con.SecDevice) {
                         curCon.DataTransferingSpeed = double.Parse(con.Speed);
                         isExists = true;
@@ -228,6 +228,33 @@ namespace WpfApp1.Confuguration {
                 }
             }
             _context.SaveChanges();
+        }
+
+        public ObservableCollection<DeviceStatus> GetDeviceStats() {
+            var stats = new ObservableCollection<DeviceStatus>();
+            var devices = _context.Devices.AsNoTracking();
+            foreach (var device in devices) {
+                if (device != null) {
+                    var status = _context.StateLogs.AsNoTracking().OrderBy(x => x.Id).LastOrDefault(x => x.DeviceId == device.Id);
+                    var curDay = DateTime.Now;
+                    var lastDay = new DateTime(curDay.Year, curDay.Month, curDay.Day, 23, 59, 59);
+                    var firstDay = new DateTime(curDay.Year, curDay.Month, curDay.Day, 0, 0, 1);
+                    var startOfDayStr = firstDay.ToString("yyyy-MM-dd HH:mm:ss");
+                    var endOfDayStr = lastDay.ToString("yyyy-MM-dd HH:mm:ss");
+                    var connections = _context.Connections.AsNoTracking().Select(x => x.FirstDeviceId == device.Id);
+                    int amount = 0;
+                    foreach (var connection in connections) {
+                        if (connection != null) {
+                            var res = _context.DataTransferLogs.FromSqlInterpolated($"SELECT * from DataTransferLogs where strftime('%Y-%m-%d %H:%M:%S', SendingTime) <= {endOfDayStr} and strftime('%Y-%m-%d %H:%M:%S', SendingTime) >= {startOfDayStr} and ConnectionId == {connection} and RecieveTime != '' and DataSize > 0").ToList();
+                            amount += res.Count;
+                        }
+                    }
+                    //if (status != null) {
+                        stats.Add(new DeviceStatus { Name = device.Name, Ip = device.Ip, Status = status != null ? status.State.Type : "", LastCheck = status != null ? status.Time.ToString() : "", PacketAmount = amount.ToString() });
+                    //}
+                }
+            }
+            return stats;
         }
     }
 }

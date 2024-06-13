@@ -127,7 +127,7 @@
                 </TabControl>
             </Grid>
         </TabItem>
-        <TabItem>
+        <TabItem Loaded="TabItem_Loaded">
             <TabItem.Header>
                 <StackPanel>
                     <TextBlock>Статистика</TextBlock>
@@ -140,9 +140,13 @@
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <GroupBox Header="Статистика оборудования">
-                        <DataGrid x:Name="deviceStatics" ItemsSource="{Binding DevicesStats}" AutoGenerateColumns="True">
+                        <DataGrid x:Name="deviceStatics" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding DeviceStats}" AutoGenerateColumns="False" CanUserAddRows="False">
                             <DataGrid.Columns>
-                                <DataGridTextColumn/>
+                                <DataGridTextColumn Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}" Header="Название" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Path=Ip, UpdateSourceTrigger=PropertyChanged}" Header="Ip адрес" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Path=Status, UpdateSourceTrigger=PropertyChanged}" Header="Состояние" Width="0.5*"/>
+                                <DataGridTextColumn Binding="{Binding Path=LastCheck, UpdateSourceTrigger=PropertyChanged}" Header="Последняя проверка" Width="*"/>
+                                <DataGridTextColumn Binding="{Binding Path=PacketAmount, UpdateSourceTrigger=PropertyChanged}" Header="Обработано пакетов за день" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
