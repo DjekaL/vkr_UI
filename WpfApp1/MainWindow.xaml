@@ -31,7 +31,14 @@
                                 <RowDefinition Height="0.1*"/>
                                 <RowDefinition Height="1*"/>
                             </Grid.RowDefinitions>
-                            <ComboBox Grid.Row="0"/>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="0.5*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" x:Name="DevicesToScan" SelectionChanged="DevicesToScan_SelectionChanged"/>
+                                <Button Grid.Column="1" x:Name="StopScanning" Content="Остановить" VerticalAlignment="Center" HorizontalAlignment="Center" Click="StopScanning_Click" />
+                            </Grid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
@@ -66,8 +73,8 @@
                         <TextBox x:Name="onlineDevices" Text="fgsf" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="20" Grid.Column="0" Grid.Row="1" TextAlignment="Center" BorderBrush="White" IsEnabled="False"/>
                         <TextBox x:Name="offlineDevices" Text="gdf" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="20" Grid.Column="1" Grid.Row="1" TextAlignment="Center" BorderBrush="White" IsEnabled="False"/>
                         
-                            <Button Grid.Column="0" Width="100" Height="20" Content="start" x:Name="start" Click="start_Click"/>
-                            <Button Grid.Column="1" Width="100" Height="20" Content="end" x:Name="end" Click="end_Click"/>
+                            <!--<Button Grid.Column="0" Width="100" Height="20" Content="start" x:Name="start" Click="start_Click"/>
+                            <Button Grid.Column="1" Width="100" Height="20" Content="end" x:Name="end" Click="end_Click"/>-->
                        
                     </Grid>
                 </Grid>

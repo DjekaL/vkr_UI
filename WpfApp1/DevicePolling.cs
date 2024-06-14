@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Timers;
+using WpfApp1.Confuguration;
 using WpfApp1.Models;
 
 namespace WpfApp1 {
@@ -11,11 +12,13 @@ namespace WpfApp1 {
         List<string> _hosts;
         MainWindowDataModel _model;
         Dictionary<string, DateTime> _AFKDevices = new Dictionary<string, DateTime>();
+        SQLiteHeper _db;
 
-        public DevicePolling(MainWindowDataModel model, int time, List<string> hosts) {
+        public DevicePolling(MainWindowDataModel model, int time, List<string> hosts, SQLiteHeper db) {
             _model = model;
             _time = time;
             _hosts = hosts;
+            _db = db;
         }
 
         private void SetTimer() {
@@ -82,8 +85,7 @@ namespace WpfApp1 {
                 if (!_AFKDevices.ContainsKey(host)) {
                     _AFKDevices.Add(host, new DateTime(0));
                 }
-            } 
-            else {
+            } else {
                 _AFKDevices.Add(host, new DateTime(0));
             }
         }
@@ -93,7 +95,7 @@ namespace WpfApp1 {
             _model.AFKDevicesTimes = string.Empty;
             foreach (var device in _AFKDevices) {
                 // получить с базы имя устройства по хосту
-                _model.AFKDevicesNames += device.Key + "\n";
+                _model.AFKDevicesNames += _db.GetDeviceNameByHost(device.Key) + "\n";
                 _model.AFKDevicesTimes += $"{device.Value:T}" + "\n";
                 _model.OfflineDevices = _AFKDevices.Count;
                 _model.OnlineDevices = _hosts.Count - _AFKDevices.Count;

@@ -337,5 +337,20 @@ namespace WpfApp1 {
                 _mainDataModel.GetStatisticCharts(StatisticalPeriod.SelectedItem.ToString(), time, size, BestSpeed);
             }
         }
+
+        private void DevicesToScan_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            perf = new PerfomanceReciever(_mainDataModel);
+            Task.Run(() => {
+                _mainDataModel.isGetPerfomance = true;
+                perf.RecieverStart();
+                PerfomanceChart chart = new PerfomanceChart();
+
+            });
+        }
+
+        private void StopScanning_Click(object sender, RoutedEventArgs e) {
+            _mainDataModel.isGetPerfomance = false;
+            perf.IsContinue = false;
+        }
     }
 }

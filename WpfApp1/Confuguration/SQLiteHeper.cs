@@ -283,5 +283,9 @@ namespace WpfApp1.Confuguration {
         public List<string> GetDevicesHosts() {
             return _context.Devices.AsNoTracking().Select(x => x.Ip).ToList();
         }
+
+        public string GetDeviceNameByHost(string host) {
+            return _context.Devices.AsNoTracking().FirstOrDefault(x => x.Ip == host).Name;
+        }
     }
 }
