@@ -95,6 +95,8 @@ namespace WpfApp1 {
                 // получить с базы имя устройства по хосту
                 _model.AFKDevicesNames += device.Key + "\n";
                 _model.AFKDevicesTimes += $"{device.Value:T}" + "\n";
+                _model.OfflineDevices = _AFKDevices.Count;
+                _model.OnlineDevices = _hosts.Count - _AFKDevices.Count;
             }
         }
     }

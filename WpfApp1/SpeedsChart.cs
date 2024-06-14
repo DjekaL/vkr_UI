@@ -91,18 +91,18 @@ namespace WpfApp1 {
 
         }
 
-        public void GetTimeLine(ISeries[] Series, Axis[] xAxes, Axis[] yAxes, List<int> time, List<int> size, List<string> serieNames) {
+        public void GetTimeLine(ISeries[] Series, Axis[] xAxes, Axis[] yAxes, List<double> time, List<double> size, List<string> serieNames) {
             int k = 0;
-            foreach (ColumnSeries<int> serie in Series) {
-                serie.Values = new ObservableCollection<int>();
+            foreach (ColumnSeries<double> serie in Series) {
+                serie.Values = new ObservableCollection<double>();
                 List<string> labels = new List<string>();
                 foreach (var item in size) {
                     labels.Add(item.ToString());
                 }
                 xAxes[0].Labels = labels;
                 
-                foreach (int i in time) {
-                    (serie.Values as ObservableCollection<int>).Add(i);
+                foreach (double i in time) {
+                    (serie.Values as ObservableCollection<double>).Add(i);
                 }
 
                 //serie.IgnoresBarPosition = true;
@@ -111,7 +111,28 @@ namespace WpfApp1 {
                 serie.YToolTipLabelFormatter = (chartPoint) => $"{chartPoint.Coordinate.PrimaryValue}";
                 serie.XToolTipLabelFormatter = (chartPoint) => $"{xAxes[0].Name}: {xAxes[0].Labels.ElementAt((System.Index)chartPoint.Coordinate.SecondaryValue)}";
             }
+        }
 
+        public void GetTimeLine(ISeries[] Series, Axis[] xAxes, Axis[] yAxes, List<List<double>> time, List<double> size, List<string> serieNames) {
+            int k = 0;
+            foreach (ColumnSeries<double> serie in Series) {
+                serie.Values = new ObservableCollection<double>();
+                List<string> labels = new List<string>();
+                foreach (var item in size) {
+                    labels.Add(item.ToString());
+                }
+                xAxes[0].Labels = labels;
+
+                foreach (double i in time[k]) {
+                    (serie.Values as ObservableCollection<double>).Add(i);
+                }
+
+                //serie.IgnoresBarPosition = true;
+                serie.Name = serieNames[k];
+                k++;
+                serie.YToolTipLabelFormatter = (chartPoint) => $"{chartPoint.Coordinate.PrimaryValue}";
+                serie.XToolTipLabelFormatter = (chartPoint) => $"{xAxes[0].Name}: {xAxes[0].Labels.ElementAt((System.Index)chartPoint.Coordinate.SecondaryValue)}";
+            }
         }
     }
 }

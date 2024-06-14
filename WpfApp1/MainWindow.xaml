@@ -140,7 +140,7 @@
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <GroupBox Header="Статистика оборудования">
-                        <DataGrid x:Name="deviceStatics" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding DeviceStats}" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid x:Name="deviceStatics" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding DeviceStats}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}" Header="Название" Width="*"/>
                                 <DataGridTextColumn Binding="{Binding Path=Ip, UpdateSourceTrigger=PropertyChanged}" Header="Ip адрес" Width="*"/>
@@ -185,8 +185,13 @@
                                                     <TextBlock>История маршрута</TextBlock>
                                                 </StackPanel>
                                             </TabItem.Header>
-                                            <DataGrid x:Name="routStatistics" AutoGenerateColumns="True" >
-
+                                            <DataGrid x:Name="routStatistics" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding RouteStats}" AutoGenerateColumns="False" CanUserAddRows="False" >
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Binding="{Binding Path=Size, UpdateSourceTrigger=PropertyChanged}" Header="Размер данных, Мбит" Width="0.7*"/>
+                                                    <DataGridTextColumn Binding="{Binding Path=Speed, UpdateSourceTrigger=PropertyChanged}" Header="Ср. скорость передачи, Мбит/с" Width="*"/>
+                                                    <DataGridTextColumn Binding="{Binding Path=CurrentTime, UpdateSourceTrigger=PropertyChanged}" Header="Время передачи, мс" Width="0.7*"/>
+                                                    <DataGridTextColumn Binding="{Binding Path=BestTime, UpdateSourceTrigger=PropertyChanged}" Header="Теоретическое время передачи, мс" Width="*"/>
+                                                </DataGrid.Columns>
                                             </DataGrid>
                                         </TabItem>
                                         <TabItem>

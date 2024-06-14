@@ -1,9 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -148,7 +144,7 @@ namespace WpfApp1 {
                  fs.Write(bytes, 0, bytes.Length);
              }*/
 
-            string json = File.ReadAllText(@"./list1.json");
+            /*string json = File.ReadAllText(@"./list1.json");
             connections = JsonConvert.DeserializeObject<List<Connection>>(json);
 
             foreach (var con in connections) {
@@ -159,43 +155,49 @@ namespace WpfApp1 {
 
             foreach (var item in dic.Values) {
                 senderDevices.Items.Add(item);
-            }
-
+            }*/
+            //_db.GenerateLogs();
             //Опрос
-            DevicePolling polling = new DevicePolling(_mainDataModel, 5000, new List<string> { "192.168.3.2", "123", "342" });
+            DevicePolling polling = new DevicePolling(_mainDataModel, 5000, _db.GetDevicesHosts());
             polling.StartDevicePolling();
 
             //Графики маршрутов
             StatisticalPeriod.ItemsSource = new List<string>() { "День", "Неделя", "Месяц" };
+            StatisticalPeriod.SelectedIndex = 0;
         }
         private void senderDevices_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            recipientDevices.Items.Clear();
-            secondPoints.Clear();
-            secondPointsTimes.Clear();
+            /* recipientDevices.Items.Clear();
+             secondPoints.Clear();
+             secondPointsTimes.Clear();
 
-            topologSize = connections.Count / 2 + 1;
-            var smeg = new int[topologSize, topologSize];
-            cost = new decimal[topologSize, topologSize];
+             topologSize = connections.Count / 2 + 1;
+             var smeg = new int[topologSize, topologSize];
+             cost = new decimal[topologSize, topologSize];
 
 
-            Dijkstra.Set(topologSize, smeg, cost);
-            Dijkstra.Get(connections, smeg, cost, 100);
+             Dijkstra.Set(topologSize, smeg, cost);
+             Dijkstra.Get(connections, smeg, cost, 100);
 
-            startVertex = dic.Where(x => x.Value == senderDevices.SelectedItem.ToString()).FirstOrDefault().Key;
+             startVertex = dic.Where(x => x.Value == senderDevices.SelectedItem.ToString()).FirstOrDefault().Key;
 
-            Dijkstra.Deijkstra(cost, startVertex - 1, topologSize, secondPoints, secondPointsTimes);
+             Dijkstra.Deijkstra(cost, startVertex - 1, topologSize, secondPoints, secondPointsTimes);
 
-            foreach (var point in secondPoints) {
-                if (dic.ContainsKey(point)) {
-                    recipientDevices.Items.Add(dic[point]);
-                    /*secondPoints.RemoveAt(point);
-                    secondPointsTimes.RemoveAt(point);*/
-                }
+             foreach (var point in secondPoints) {
+                 if (dic.ContainsKey(point)) {
+                     recipientDevices.Items.Add(dic[point]);
+                     *//*secondPoints.RemoveAt(point);
+                     secondPointsTimes.RemoveAt(point);*//*
+                 }
+             }*/
+            if (senderDevices.SelectedValue != null) {
+                recipientDevices.ItemsSource = _db.GetAvailableSecDevs(senderDevices.SelectedValue.ToString());
             }
+
+
         }
 
         private void recipientDevices_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            if (recipientDevices.SelectedItem != null) {
+            /*if (recipientDevices.SelectedItem != null) {
                 secondPoints.Clear();
                 DataTable table = new DataTable();
 
@@ -281,7 +283,8 @@ namespace WpfApp1 {
                 names = new List<string> { "Скорость передачи" };
                 chart = new SpeedsChart(speeds, size, names);
                 //speedsChart.DataContext = chart;
-            }
+            }*/
+            SetRouteStats();
         }
 
         PerfomanceReciever perf;
@@ -303,18 +306,36 @@ namespace WpfApp1 {
         }
 
         private void StatisticalPeriod_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            List<int> time = new List<int>();
-            List<int> size = new List<int>();
-            _db.GetStatistic(StatisticalPeriod.SelectedItem.ToString(), senderDevices.SelectedItem.ToString(), recipientDevices.SelectedItem.ToString(), time, size);
-            _mainDataModel.GetStatisticCharts(StatisticalPeriod.SelectedItem.ToString(), time, size);
-            
+            /*if (recipientDevices.SelectedValue != null && senderDevices.SelectedValue != null) {
+                List<int> time = new List<int>();
+                List<int> size = new List<int>();
+                _db.GetStatistic(StatisticalPeriod.SelectedItem.ToString(), senderDevices.SelectedItem.ToString(), recipientDevices.SelectedItem.ToString(), time, size);
+                _mainDataModel.GetStatisticCharts(StatisticalPeriod.SelectedItem.ToString(), time, size);
+            }*/
+            SetRouteStats();
         }
 
         private void TabItem_Loaded(object sender, RoutedEventArgs e) {
+            senderDevices.ItemsSource = _db.GetDevicesNames();
             Task.Run(() => {
                 _mainDataModel.DeviceStats = _db.GetDeviceStats();
             });
             //deviceStatics.ItemsSource = _mainDataModel.DeviceStats;
+
+        }
+
+        private void SetRouteStats() {
+            _mainDataModel.RouteStats.Clear();
+            if (recipientDevices.SelectedValue != null && senderDevices.SelectedValue != null && StatisticalPeriod.SelectedValue != null) {
+                List<double> time = new List<double>();
+                List<double> size = new List<double>();
+                var BestSpeed = _db.GetRouteSpeed(senderDevices.SelectedValue.ToString(), recipientDevices.SelectedValue.ToString());
+                _db.GetStatistic(StatisticalPeriod.SelectedItem.ToString(), senderDevices.SelectedItem.ToString(), recipientDevices.SelectedItem.ToString(), time, size);
+                for (int i = 0; i < time.Count; i++) {
+                    _mainDataModel.RouteStats.Add(new RouteStatistic { Size = size[i].ToString(), CurrentTime = Math.Round((time[i]), 3).ToString(), BestTime = Math.Round((size[i] / BestSpeed * 1000), 3).ToString(), Speed = Math.Round((size[i] / time[i] * 1000), 3).ToString() });
+                }
+                _mainDataModel.GetStatisticCharts(StatisticalPeriod.SelectedItem.ToString(), time, size, BestSpeed);
+            }
         }
     }
 }

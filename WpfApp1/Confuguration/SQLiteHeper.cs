@@ -111,7 +111,7 @@ namespace WpfApp1.Confuguration {
             }
         }
 
-        public void GetStatistic(string period, string devSender, string devReciever, List<int> time, List<int> size) {
+        public void GetStatistic(string period, string devSender, string devReciever, List<double> time, List<double> size) {
             var ds = _context.Devices.FirstOrDefault(x => x.Name == devSender);
             var dr = _context.Devices.FirstOrDefault(x => x.Name == devReciever);
             var con = _context.Connections.FirstOrDefault(x => x.FirstDeviceId == ds.Id && x.SecondDeviceId == dr.Id);
@@ -144,7 +144,9 @@ namespace WpfApp1.Confuguration {
                     var endOfDayStr = endOfDay.ToString("yyyy-MM-dd HH:mm:ss");
 
                     var res = _context.DataTransferLogs.FromSqlInterpolated($"SELECT * from DataTransferLogs where strftime('%Y-%m-%d %H:%M:%S', SendingTime) <= {endOfDayStr} and strftime('%Y-%m-%d %H:%M:%S', SendingTime) >= {startOfDayStr} and ConnectionId == {con.Id} and RecieveTime != '' and DataSize > 0").ToList();
-                    Logs.Add(res);
+                    if (res.Count > 0) {
+                        Logs.Add(res);
+                    }
                     startOfDay = startOfDay.AddDays(1);
                 }
                 switch (period) {
@@ -156,10 +158,10 @@ namespace WpfApp1.Confuguration {
                                 if (log.Count > 0) {
                                     size.Add(Convert.ToInt32(item.DataSize));
                                     interval = (TimeSpan)(item.RecieveTime - item.SendingTime);
-                                    time.Add((int)interval.TotalSeconds);
+                                    time.Add((int)interval.TotalMilliseconds);
                                 } else {
                                     size.Add(averageSize);
-                                    time.Add((int)interval.TotalSeconds);
+                                    time.Add((int)interval.TotalMilliseconds);
                                 }
                             }
                         }
@@ -175,10 +177,10 @@ namespace WpfApp1.Confuguration {
                             }
                             if (log.Count > 0) {
                                 size.Add(averageSize / log.Count);
-                                time.Add(Convert.ToInt32(interval.TotalSeconds) / log.Count);
+                                time.Add(Convert.ToInt32(interval.TotalMilliseconds) / log.Count);
                             } else {
                                 size.Add(averageSize);
-                                time.Add((int)interval.TotalSeconds);
+                                time.Add((int)interval.TotalMilliseconds);
                             }
                         }
                         break;
@@ -250,11 +252,36 @@ namespace WpfApp1.Confuguration {
                         }
                     }
                     //if (status != null) {
-                        stats.Add(new DeviceStatus { Name = device.Name, Ip = device.Ip, Status = status != null ? status.State.Type : "", LastCheck = status != null ? status.Time.ToString() : "", PacketAmount = amount.ToString() });
+                    stats.Add(new DeviceStatus { Name = device.Name, Ip = device.Ip, Status = status != null ? status.State.Type : "", LastCheck = status != null ? status.Time.ToString() : "", PacketAmount = amount.ToString() });
                     //}
                 }
             }
             return stats;
+        }
+
+        public List<string> GetAvailableSecDevs(string firstDevName) {
+            return _context.Connections.Where(x => x.FirstDevice.Name == firstDevName).Select(x => x.SecondDevice.Name).ToList();
+        }
+
+        public double GetRouteSpeed(string fd, string sd) {
+            return _context.Connections.FirstOrDefault(x => x.FirstDevice.Name == fd && x.SecondDevice.Name == sd).DataTransferingSpeed;
+        }
+
+        public void GenerateLogs() {
+            var connections = _context.Connections.AsNoTracking().Select(x => x.Id).ToList();
+            var startDay = new DateTime(2024, 6, 1, 0, 0, 0, 1);
+            var endDay = new DateTime(2024, 6, 14, 12, 0, 0);
+            Random random = new Random();
+            while (startDay < endDay) {
+                var con = connections[random.Next(1, connections.Count())];
+                _context.DataTransferLogs.AddAsync(new DataTransferLog { ConnectionId = con, DataSize = random.Next(8, 401), SendingTime = startDay, RecieveTime = startDay.AddMilliseconds(random.Next(1, 401)) });
+                startDay = startDay.AddSeconds(1);
+            }
+            _context.SaveChanges();
+        }
+
+        public List<string> GetDevicesHosts() {
+            return _context.Devices.AsNoTracking().Select(x => x.Ip).ToList();
         }
     }
 }

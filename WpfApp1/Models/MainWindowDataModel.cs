@@ -1,19 +1,15 @@
-﻿using HarfBuzzSharp;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using WpfApp1.Confuguration;
 
 namespace WpfApp1.Models {
     public class MainWindowDataModel : INotifyPropertyChanged {
 
-        public MainWindowDataModel()
-        {
-            
+        public MainWindowDataModel() {
+
         }
 
         private string _log = string.Empty;
@@ -93,24 +89,26 @@ namespace WpfApp1.Models {
                 OnPropertyChanged("AFKDevicesTimes");
             }
         }
+        public int OnlineDevices { get; set; }
+        public int OfflineDevices { get; set; }
 
         //Time
-        public ISeries[] TimelineChart { get; set; } = new ISeries[] { new ColumnSeries<int> { Values = new ObservableCollection<int> ()},
-                                                    new ColumnSeries<int> { Values = new ObservableCollection<int> ()} };
+        public ISeries[] TimelineChart { get; set; } = new ISeries[] { new ColumnSeries<double> { Values = new ObservableCollection<double> (), IgnoresBarPosition = true},
+                                                    new ColumnSeries<double> { Values = new ObservableCollection<double> (), IgnoresBarPosition = true} };
 
         public Axis[] TimelineXAxes { get; set; } = new Axis[] { new Axis { Name = "Средний объем данных, Мбит", Labels = new List<string>() } };
-        public Axis[] TimelineYAxes { get; set; } = new Axis[] { new Axis { Name = "Средняя время передачи данных, с" } };
-        public List<string> TimeLineSerieNames = new List<string>() { "Время передачи, с:", "Лучшеее время передачи, с:" };
+        public Axis[] TimelineYAxes { get; set; } = new Axis[] { new Axis { Name = "Средняя время передачи данных, мс" } };
+        public List<string> TimeLineSerieNames = new List<string>() { "Время передачи, мс:", "Лучшеее время передачи, мс:" };
 
         //Speed
-        public ISeries[] SpeedlineChart { get; set; } = new ISeries[] { new ColumnSeries<int> { Values = new ObservableCollection<int>() } };
+        public ISeries[] SpeedlineChart { get; set; } = new ISeries[] { new ColumnSeries<double> { Values = new ObservableCollection<double>() } };
         public Axis[] SpeedlineXAxes { get; set; } = new Axis[] { new Axis { Name = "Средний объем данных, Мбит", Labels = new List<string>() } };
         public Axis[] SpeedlineYAxes { get; set; } = new Axis[] { new Axis { Name = "Средняя скорость передачи данных, Мбит\\с" } };
         public List<string> SpeedLineSerieNames = new List<string>() { "Скорость передачи, Мб/c" };
 
         SpeedsChart speedsChart = new SpeedsChart();
 
-        public void GetStatisticCharts(string period, List<int> time, List<int> size) {
+        public void GetStatisticCharts(string period, List<double> time, List<double> size, double bestSpeed) {
             /*switch (period) {
                 case "Неделя":
                 case "Месяц":
@@ -134,12 +132,20 @@ namespace WpfApp1.Models {
                     SpeedlineYAxes = new Axis[] { new Axis { Name = "Скорость передачи данных, Мбит\\с" } };
                     break;
             }*/
-            
-            speedsChart.GetTimeLine(TimelineChart, TimelineXAxes, TimelineYAxes, time, size, TimeLineSerieNames);
-            List<int> speed = new List<int>();
+
+            List<List<double>> times = new List<List<double>>();
+            times.Add(new List<double>());
+            times.Add(new List<double>());
+            foreach(var i in time) {
+                times[1].Add(Math.Round(i, 3));
+                times[0].Add(Math.Round((size[time.IndexOf(i)] / bestSpeed * 1000), 3));
+            }
+            speedsChart.GetTimeLine(TimelineChart, TimelineXAxes, TimelineYAxes, times, size, TimeLineSerieNames);
+
+            List<double> speed = new List<double>();
             foreach (int i in time) {
                 if (i > 0) {
-                    speed.Add(size[time.IndexOf(i)] / i);
+                    speed.Add(Math.Round((size[time.IndexOf(i)] / i * 1000), 3));
                 } else {
                     speed.Add(0);
                 }
@@ -150,11 +156,22 @@ namespace WpfApp1.Models {
             get {
                 return _deviceStats;
             }
-            set { 
+            set {
                 _deviceStats = value;
                 OnPropertyChanged("DeviceStats");
-            } 
-        } 
+            }
+        }
         private ObservableCollection<DeviceStatus> _deviceStats = new ObservableCollection<DeviceStatus>();
+
+        public ObservableCollection<RouteStatistic> RouteStats {
+            get {
+                return _routeStats;
+            }
+            set {
+                _routeStats = value;
+                OnPropertyChanged("RouteStats");
+            }
+        }
+        private ObservableCollection<RouteStatistic> _routeStats = new ObservableCollection<RouteStatistic>();
     }
 }
