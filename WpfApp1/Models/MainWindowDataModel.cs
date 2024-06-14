@@ -12,15 +12,15 @@ namespace WpfApp1.Models {
 
         }
 
-        private string _log = string.Empty;
+        //private string _log = string.Empty;
         public bool isGetPerfomance = false;
-        public string Log {
+        /*public string Log {
             get { return _log; }
             set {
                 _log = value;
                 OnPropertyChanged("Log");
             }
-        }
+        }*/
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -89,12 +89,42 @@ namespace WpfApp1.Models {
                 OnPropertyChanged("AFKDevicesTimes");
             }
         }
-        public int OnlineDevices { get; set; }
-        public int OfflineDevices { get; set; }
+        private string _onlineDevices = string.Empty;
+        public string OnlineDevices {
+            get {
+                return _onlineDevices;
+            }
+            set {
+                _onlineDevices = value;
+                OnPropertyChanged("OnlineDevices");
+            }
+        }
+        private string _offlineDevices = string.Empty;
+        public string OfflineDevices {
+            get {
+                return _offlineDevices;
+            }
+            set {
+                _offlineDevices = value;
+                OnPropertyChanged("OfflineDevices");
+            }
+        }
+
+        private int _period = 5000;
+
+        public int Period {
+            get {
+                return _period;
+            }
+            set {
+                _period = value;
+                OnPropertyChanged("Period");
+            }
+        }
 
         //Time
         public ISeries[] TimelineChart { get; set; } = new ISeries[] { new ColumnSeries<double> { Values = new ObservableCollection<double> (), IgnoresBarPosition = true},
-                                                    new ColumnSeries<double> { Values = new ObservableCollection<double> (), IgnoresBarPosition = true} };
+                                                    new ColumnSeries<double> { Values = new ObservableCollection<double> (), IgnoresBarPosition = true, MaxBarWidth=30} };
 
         public Axis[] TimelineXAxes { get; set; } = new Axis[] { new Axis { Name = "Средний объем данных, Мбит", Labels = new List<string>() } };
         public Axis[] TimelineYAxes { get; set; } = new Axis[] { new Axis { Name = "Средняя время передачи данных, мс" } };
@@ -136,9 +166,9 @@ namespace WpfApp1.Models {
             List<List<double>> times = new List<List<double>>();
             times.Add(new List<double>());
             times.Add(new List<double>());
-            foreach(var i in time) {
-                times[1].Add(Math.Round(i, 3));
-                times[0].Add(Math.Round((size[time.IndexOf(i)] / bestSpeed * 1000), 3));
+            for (int i = 0; i < time.Count; i++) {
+                times[0].Add(Math.Round(time[i], 3));
+                times[1].Add(Math.Round((size[i] / bestSpeed * 1000), 3));
             }
             speedsChart.GetTimeLine(TimelineChart, TimelineXAxes, TimelineYAxes, times, size, TimeLineSerieNames);
 

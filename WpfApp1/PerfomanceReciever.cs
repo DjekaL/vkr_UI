@@ -32,7 +32,7 @@ namespace WpfApp1 {
                     message = Encoding.UTF8.GetString(data.ToArray());
                     data.Clear();
                     var perfomance = JsonConvert.DeserializeObject<Perfomance>(message);
-                    _mainDataModel.Log += perfomance;
+                    //_mainDataModel.Log += perfomance;
                     _mainDataModel.Perfomances = perfomance;
                 }
                 catch {

@@ -158,8 +158,10 @@ namespace WpfApp1 {
             }*/
             //_db.GenerateLogs();
             //Опрос
-            DevicePolling polling = new DevicePolling(_mainDataModel, 5000, _db.GetDevicesHosts());
+            DevicePolling polling = new DevicePolling(_mainDataModel, _db.GetDevicesHosts(), _db);
             polling.StartDevicePolling();
+
+            DevicesToScan.ItemsSource = _db.GetDevicesNames();
 
             //Графики маршрутов
             StatisticalPeriod.ItemsSource = new List<string>() { "День", "Неделя", "Месяц" };

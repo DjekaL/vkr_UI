@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using WpfApp1.Confuguration.Models;
 using WpfApp1.Models;
 
@@ -243,7 +244,7 @@ namespace WpfApp1.Confuguration {
                     var firstDay = new DateTime(curDay.Year, curDay.Month, curDay.Day, 0, 0, 1);
                     var startOfDayStr = firstDay.ToString("yyyy-MM-dd HH:mm:ss");
                     var endOfDayStr = lastDay.ToString("yyyy-MM-dd HH:mm:ss");
-                    var connections = _context.Connections.AsNoTracking().Select(x => x.FirstDeviceId == device.Id);
+                    var connections = _context.Connections.AsNoTracking().Where(x => x.FirstDeviceId == device.Id).Select(x => x.Id);
                     int amount = 0;
                     foreach (var connection in connections) {
                         if (connection != null) {
@@ -252,7 +253,7 @@ namespace WpfApp1.Confuguration {
                         }
                     }
                     //if (status != null) {
-                    stats.Add(new DeviceStatus { Name = device.Name, Ip = device.Ip, Status = status != null ? status.State.Type : "", LastCheck = status != null ? status.Time.ToString() : "", PacketAmount = amount.ToString() });
+                    stats.Add(new DeviceStatus { Name = device.Name, Ip = device.Ip, Status = status != null ? status.State.Type : "В сети", LastCheck = status != null ? status.Time.ToString() : DateTime.Now.ToString(), PacketAmount = amount.ToString() });
                     //}
                 }
             }
@@ -274,7 +275,7 @@ namespace WpfApp1.Confuguration {
             Random random = new Random();
             while (startDay < endDay) {
                 var con = connections[random.Next(1, connections.Count())];
-                _context.DataTransferLogs.AddAsync(new DataTransferLog { ConnectionId = con, DataSize = random.Next(8, 401), SendingTime = startDay, RecieveTime = startDay.AddMilliseconds(random.Next(1, 401)) });
+                _context.DataTransferLogs.AddAsync(new DataTransferLog { ConnectionId = con, DataSize = random.Next(8, 401), SendingTime = startDay, RecieveTime = startDay.AddMilliseconds(random.Next(3, 8)) });
                 startDay = startDay.AddSeconds(1);
             }
             _context.SaveChanges();
@@ -285,7 +286,20 @@ namespace WpfApp1.Confuguration {
         }
 
         public string GetDeviceNameByHost(string host) {
-            return _context.Devices.AsNoTracking().FirstOrDefault(x => x.Ip == host).Name;
+            return _context.Devices.AsNoTracking().FirstOrDefaultAsync(x => x.Ip == host).Result.Name;
+        }
+
+        public int GetDeviceIdByName(string name) {
+            return _context.Devices.FirstOrDefault(x => x.Name == name).Id;
+        }
+
+        public async Task AddDeviceState(StateLog state) {
+            _context.StateLogs.Add(state);
+            _context.SaveChanges();
+        }
+
+        public string GetStateType(int stateId) {
+            return _context.States.AsNoTracking().FirstOrDefaultAsync(x => x.Id == stateId).Result.Type;
         }
     }
 }

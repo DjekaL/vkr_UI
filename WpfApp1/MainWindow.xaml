@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WpfApp1"
         xmlns:lvc ="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800" Loaded="Window_Loaded">
+        Title="MainWindow" Height="600" Width="900" Loaded="Window_Loaded">
 
     <TabControl>
         <TabItem>
@@ -28,7 +28,7 @@
                     <GroupBox Header="График интенсивности нагрузки" Grid.Row="1">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="0.1*"/>
+                                <RowDefinition MaxHeight="25"/>
                                 <RowDefinition Height="1*"/>
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="0">
@@ -70,8 +70,8 @@
                         <GroupBox Background="LightPink" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="White" Grid.Column="1">
                             <Label Content="Устройства не в сети" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </GroupBox>
-                        <TextBox x:Name="onlineDevices" Text="fgsf" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="20" Grid.Column="0" Grid.Row="1" TextAlignment="Center" BorderBrush="White" IsEnabled="False"/>
-                        <TextBox x:Name="offlineDevices" Text="gdf" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="20" Grid.Column="1" Grid.Row="1" TextAlignment="Center" BorderBrush="White" IsEnabled="False"/>
+                        <TextBox x:Name="OnlineDevices" Text="{Binding Path=OnlineDevices}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="20" Grid.Column="0" Grid.Row="1" TextAlignment="Center" BorderBrush="White" IsEnabled="False"/>
+                        <TextBox x:Name="OfflineDevices" Text="{Binding Path=OfflineDevices}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Height="20" Grid.Column="1" Grid.Row="1" TextAlignment="Center" BorderBrush="White" IsEnabled="False"/>
                         
                             <!--<Button Grid.Column="0" Width="100" Height="20" Content="start" x:Name="start" Click="start_Click"/>
                             <Button Grid.Column="1" Width="100" Height="20" Content="end" x:Name="end" Click="end_Click"/>-->
@@ -103,20 +103,27 @@
                         </TabItem.Header>
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
+                                <RowDefinition Height="0.4*"/>
+                                <RowDefinition Height="0.3*"/>
+                                <RowDefinition Height="0.3*"/>
+                                <RowDefinition MaxHeight="25"/>
+                                <RowDefinition Height="2*"/>
                             </Grid.RowDefinitions>
-                            <TextBox Grid.Row="0" x:Name="logOfSomething" Text="{Binding Path=Log}"/>
+                            <Grid Grid.Row="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Label Content="Период опроса:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBox Grid.Row="1" x:Name="Period" Text="{Binding Path=Period}" HorizontalAlignment="Center" VerticalAlignment="Center" MinHeight="20" MinWidth="90"/>
+                            </Grid>
                             <Label Grid.Row="1" x:Name="LastPolling" Content="{Binding Path=LastPolling}"/>
                             <Label Grid.Row="2" x:Name="NextPolling" Content="{Binding Path=NextPolling}"/>
-                            <Label Grid.Row="3" Content="Устройства не в сети:"/>
+                            <Label Grid.Row="3" Content="Устройства не в сети:" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                             <Grid Grid.Row="4">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition MaxWidth="50"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBox Grid.Column="0" x:Name="OfflineDevicesNames" Text="{Binding Path=AFKDevicesNames}"/>
                                 <TextBox Grid.Column="1" x:Name="OfflineDevicesTimes" Text="{Binding Path=AFKDevicesTimes}"/>
@@ -162,7 +169,7 @@
                     <GroupBox Header="Статистика маршрута">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="0.4*"/>
+                                <RowDefinition MaxHeight="50"/>
                                 <RowDefinition Height="1.5*"/>
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="0">
